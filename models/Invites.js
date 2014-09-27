@@ -53,6 +53,13 @@ Invites.newInvite = function(room, user, callback) {
   async.waterfall(
   [
     function(callback) {
+      user.hasRooms(room, function(err, inRoom) {
+        if (err) { return callback(err); }
+        if (inRoom) callback(new Error("User already in room"));
+        else callback(null);
+      });
+    },
+    function(callback) {
       that.count(
         {
           room_room_id: room.room_id,
@@ -60,11 +67,8 @@ Invites.newInvite = function(room, user, callback) {
         },
         function(err, count) {
           if (err) { return callback(err); }
-          if (count) {
-            callback(new Error('Invite already exists for this user'));
-          } else {
-            callback(null);
-          }
+          if (count) callback(new Error('Invite already exists for this user'));
+          else callback(null);
         });
     },
     function(callback) {
