@@ -19,7 +19,7 @@ var Users = db.define('users', {
   }
 });
 
-Users.createUser = function(firstName, lastName, email, password, callback) {
+Users.newUser = function(firstName, lastName, email, password, callback) {
   var user = {
     first_name: firstName,
     last_name: lastName,
@@ -28,6 +28,6 @@ Users.createUser = function(firstName, lastName, email, password, callback) {
     is_admin: false
   };
   this.create(user, callback);
-}
+};
 
 module.exports = Users;
