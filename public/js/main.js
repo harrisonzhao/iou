@@ -14,7 +14,11 @@ require([
 	'backbone',
 	'd3',
 	'app',
+	'models/SessionModel',
+	'router',
 	'bootstrap'
-	], function($, _, Backbone, d3, App){
-    new App;
+	], function($, _, Backbone, d3, App, SessionModel, Router){
+		var app = new App();
+    app.session = new SessionModel({});
+    app.router = new Router();
 });
