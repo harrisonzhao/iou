@@ -1,14 +1,12 @@
 var orm = require('orm');
 var settings = require('./settings/exports');
+var db = orm.connect(settings.secrets.mysqlConfigs);
 
-var dbConnection;
-module.exports = dbConnection;
-
-orm.connect(settings.secrets.mysqlConfigs, function (err, db) {
+db.on('connect', function (err) {
   if (err) {
-    console.log("Something is wrong with the connection", err);
+    console.log('Something is wrong with the connection', err);
     return;
   }
-
-  dbConnection = db;
 });
+
+module.exports = db;
