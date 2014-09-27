@@ -8,7 +8,9 @@ var configs = require('config/configs');
 configs.configure(app);
 
 var models = require('models/models');
-
+models.Users.newUser('abc', 'def', 'hij', 'klm', function(err, result) {
+  console.log(err ? err : result);
+})
 // var staticPages = require('controllers/pages');
 // app.get('/', staticPages.renderIndex);
 // app.get('/login/', staticPages.renderLogin);

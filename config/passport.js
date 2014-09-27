@@ -29,9 +29,6 @@ function localSignupVerifyCallback(req, email, password, done) {
     },
     function(callback) {
       User.newUser(req.body.firstName, req.body.lastName, email, password, callback);
-    },
-    function(callback) {
-      User.one({email: email}, callback);
     }
   ],
   function(err, result) {
