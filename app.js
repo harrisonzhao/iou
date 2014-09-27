@@ -7,6 +7,8 @@ var app = module.exports = express();
 var configs = require('config/configs');
 configs.configure(app);
 
+var models = require('models/models');
+
 // var staticPages = require('controllers/pages');
 // app.get('/', staticPages.renderIndex);
 // app.get('/login/', staticPages.renderLogin);

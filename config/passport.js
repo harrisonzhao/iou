@@ -2,6 +2,7 @@
 require('rootpath')();
 
 var LocalStrategy = require('passport-local').Strategy;
+var async = require('async');
 var User = require('models/User');
 
 function localLoginVerifyCallback(email, password, done) {
@@ -16,7 +17,13 @@ function localLoginVerifyCallback(email, password, done) {
     });
 }
 
-function localSignupVerifyCallback(email, password, done) {
+function localSignupVerifyCallback(req, email, password, done) {
+  async.waterfall(
+  [
+  ],
+  function(err, result) {
+
+  });
   User.one(
     {email: email}, 
     function(err, result) {
@@ -24,7 +31,16 @@ function localSignupVerifyCallback(email, password, done) {
       if (result) { 
         return done(null, false, { message: 'Email already exists' });
       }
-      return done(null, result);
+      var user = {};
+      user.email = email;
+      user.first_name = req.body.firstName;
+      user.last_name = req.body.last_name;
+      user.password = password;
+      user.is_admin = false;
+      User.create(user, function(err, result) {
+        if (err) { return done(err); }
+
+      })
     });
 }
 

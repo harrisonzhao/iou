@@ -7,7 +7,7 @@ var Rooms = require('./Rooms');
 var Transactions = require('./Transactions');
 var Invites = require('./Invites');
 
-Users.hasMany('rooms', Rooms, { reverse: 'users' });
+Users.hasMany('rooms', Rooms, {}, { reverse: 'users' });
 Invites.hasOne('room', Rooms);
 Invites.hasOne('receiver', Users);
 Transactions.hasOne('room', Rooms);
