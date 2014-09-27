@@ -20,12 +20,14 @@ var Users = db.define('users', {
 });
 
 Users.createUser = function(firstName, lastName, email, password, callback) {
-  return {
+  var user = {
     first_name: firstName,
     last_name: lastName,
     email: email,
-    password: bcrypt.hashSync(password, 8)
+    password: bcrypt.hashSync(password, 8),
+    is_admin: false
   };
+  this.create(user, callback);
 }
 
 module.exports = Users;

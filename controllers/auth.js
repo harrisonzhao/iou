@@ -5,7 +5,7 @@ var configs = require('config/configs');
 var passport = configs.passport;
 
 exports.checkLoggedIn = function(req, res, next) {
-  req.user ? next() : res.send(401);
+  req.user ? next() : res.sendStatus(401);
 }
 
 exports.localSignup = function(req, res, next) {
@@ -14,7 +14,7 @@ exports.localSignup = function(req, res, next) {
     if (!user) { return res.send(404, info.message); }
     req.logIn(user, function(err) {
       if (err) { return next(err); }
-      res.send(200);
+      res.sendStatus(200);
     });
   })(req, res, next);
 }
@@ -25,16 +25,16 @@ exports.localLogin = function(req, res, next) {
     if (!user) { return res.send(404, info.message); }
     req.logIn(user, function(err) {
       if (err) { return next(err); }
-      res.send(200);
+      res.sendStatus(200);
     });
   })(req, res, next);
 }
 
 exports.logout = function(req, res, next) {
   if (!req.user) {
-    res.send(401);
+    res.sendStatus(401);
   } else {
     req.logout();
-    res.send(200);
+    res.sendStatus(200);
   }
 }
