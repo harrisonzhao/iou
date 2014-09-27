@@ -10,15 +10,19 @@ var Rooms = db.define('rooms', {
   graph    : { type: "object" },
 }, {
   methods : {
-    addUser : function(user) {
+    addUser : function(user, callback) {
       var that = this;
       this.addUsers(user, function(err) {
-        if (err) console.log("Error adding user");
-        else that.is_empty = 0;
+        if (err) callback(new Error("Error adding user"), that);
+        else {
+          that.is_empty = 0;
+          that.save();
+          callback(err, that);
+        }
       });
 
     },
-    removeUser : function(user) {
+    removeUser : function(user, callback) {
 
     }
   }
@@ -33,9 +37,8 @@ Rooms.newRoom = function(name, creator, callback) {
   };
 
   this.create(room, function(err, result) {
-    if (!err) result.addUser(creator);
-  
-    callback(err, result);
+    if (!err) result.addUser(creator, callback);
+    else callback(err, result);
   });
 };
 
