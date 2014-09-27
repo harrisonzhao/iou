@@ -3,8 +3,8 @@ var multiline = require('multiline');
 
 var bcrypt = require('bcryptjs');
 //must load db.js instead of configs.js to avoid circular referencing
-var connection = require('config/db');
-
+//var connection = require('config/db');
+var connection;
 var insertQuery = multiline(function() {/*
   INSERT INTO Users (email, password) 
   VALUES (?, ?);

@@ -15,7 +15,7 @@ var passport = require('passport');
 var session = require('express-session');
 
 var settings = require('./settings/exports');
-var dbConnection = require('./db');
+var dbConnection = require('./orm');
 
 //set up passport configs
 require('./passport')(passport);

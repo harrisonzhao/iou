@@ -2,7 +2,7 @@ var orm = require('orm');
 var settings = require('./settings/exports');
 
 var dbConnection;
-modules.exports = dbConnection;
+module.exports = dbConnection;
 
 orm.connect(settings.secrets.mysqlConfigs, function (err, db) {
   if (err) {
