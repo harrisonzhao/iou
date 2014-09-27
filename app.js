@@ -7,11 +7,19 @@ var app = module.exports = express();
 var configs = require('config/configs');
 configs.configure(app);
 
-/*var models = require('models/models');
-models.Users.newUser('abc', 'def', 'hij', 'klm', function(err, result) {
-  console.log(err ? err : result);
-})*/
 var registry = require('controllers/registry');
+
+var models = require('models/models');
+// models.Users.newUser('abc', 'def', 'hij', 'klm', function(err, result) {
+//   console.log(err ? err : result);
+// })
+
+// models.Users.one({first_name : "Rene"}, function(err, result) {
+//   models.Rooms.newRoom("pusheen", result, function(err, result) {
+//     console.log("Hello");
+//   });
+// });
+
 // var staticPages = require('controllers/pages');
 // app.get('/', staticPages.renderIndex);
 // app.get('/login/', staticPages.renderLogin);

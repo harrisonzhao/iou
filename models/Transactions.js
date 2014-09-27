@@ -12,19 +12,29 @@ var Transactions = db.define('transactions', {
   approved_time  : { type: "date", defaultValue: null }
 }, {
   methods : {
-    approve : function() {
-
+    /**
+     * @param  {Function} callback
+     * args: err, transaction
+     */
+    approve : function(callback) {
+      if (this.approved_time === null) {
+        this.approved_time = new Date();
+        this.save(function(err) {
+          callback(err, this);
+        });
+      }
     },
+
     /**
      * @param  {obj}   room     [description]
      * @param  {obj}   source   [description]
      * @param  {obj}   sink     [description]
      * @param  {Function} callback
-     * args: err
+     * args: err, transaction
      */
     linkRelations : function(room, source, sink, callback) {
       var that = this;
-      async.parallel(
+      async.waterfall(
       [
         function(callback) {
           that.setRoom(room, callback);
@@ -36,7 +46,9 @@ var Transactions = db.define('transactions', {
           that.setSink(sink, callback);
         }
       ],
-      callback);
+      function(err) {
+        callback(err, that);
+      });
     }
   }
 });
@@ -49,14 +61,13 @@ Transactions.newTransaction = function(room, source, sink, value, reason, callba
     approved_time : null
   };
 
-  this.create(transaction, function(err, result) {
-    if (err) {
-      console.log("Error creating new transaction");
-    } else {
-      result.linkRelations(room, source, sink);
-    }
+  if (sink.user_id === source.user_id) {
+    return callback(new Error("sink equals source"));
+  }
 
-    callback(err, result);
+  this.create(transaction, function(err, result) {
+    if (!err) result.linkRelations(room, source, sink, callback);
+    else callback(err, result);
   });
 };
 
