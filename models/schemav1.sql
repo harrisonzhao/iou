@@ -15,7 +15,7 @@ CREATE TABLE IF NOT EXISTS users (
 #DROP TABLE IF EXISTS rooms;
 CREATE TABLE IF NOT EXISTS rooms (
   room_id INT NOT NULL AUTO_INCREMENT UNIQUE,
-  name VARCHAR(40),
+  name VARCHAR(40) NOT NULL,
   is_empty BOOLEAN NOT NULL DEFAULT 0,
   graph BLOB,
   PRIMARY KEY (room_id)
@@ -48,9 +48,10 @@ CREATE TABLE IF NOT EXISTS transactions (
   approved_time DATETIME DEFAULT NULL,
   source_id INT NOT NULL,
   sink_id INT NOT NULL,
-  cents INT NOT NULL,
+  value INT NOT NULL,
   reason VARCHAR(140),
   PRIMARY KEY (transaction_id),
   FOREIGN KEY (source_id) REFERENCES users(user_id),
-  FOREIGN KEY (sink_id) REFERENCES users(user_id)
+  FOREIGN KEY (sink_id) REFERENCES users(user_id),
+  FOREIGN KEY (room_id) REFERENCES rooms(room_id)
 );
