@@ -14,8 +14,4 @@ var Rooms = db.define('rooms', {
   }
 });
 
-Rooms.sync( function(err) {
-  !err && console.log("Synced rooms!");
-});
-
 module.exports = Rooms;

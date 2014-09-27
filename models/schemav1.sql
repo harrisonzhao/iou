@@ -52,5 +52,6 @@ CREATE TABLE IF NOT EXISTS transactions (
   reason VARCHAR(140),
   PRIMARY KEY (transaction_id),
   FOREIGN KEY (source_id) REFERENCES users(user_id),
-  FOREIGN KEY (sink_id) REFERENCES users(user_id)
+  FOREIGN KEY (sink_id) REFERENCES users(user_id),
+  FOREIGN KEY (room_id) REFERENCES rooms(room_id)
 );

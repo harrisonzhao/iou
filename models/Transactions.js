@@ -15,8 +15,4 @@ var Transactions = db.define('transactions', {
   }
 });
 
-Transactions.sync( function(err) {
-  !err && console.log("Synced transactions!");
-});
-
 module.exports = Transactions;

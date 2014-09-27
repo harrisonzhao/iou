@@ -15,8 +15,4 @@ var Users = db.define('users', {
   }
 });
 
-Users.sync( function(err) {
-  !err && console.log("Synced users!");
-});
-
 module.exports = Users;
