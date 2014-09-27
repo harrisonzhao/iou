@@ -11,8 +11,32 @@ var Transactions = db.define('transactions', {
   approved_time  : { type: "date", defaultValue: null }
 }, {
   methods : {
+    approve : function() {
 
+    },
+    linkRelations : function(room, source, sink) {
+
+    }
   }
 });
+
+Transactions.newTransaction = function(room, source, sink, value, reason, callback) {
+  var transaction = {
+    value         : value,
+    reason        : reason,
+    created_time  : new Date(),
+    approved_time : null
+  };
+
+  this.create(transaction, function(err, result) {
+    if (err) {
+      console.log("Error creating new transaction");
+    } else {
+      result.linkRelations(room, source, sink);
+    }
+
+    callback(err, result);
+  });
+};
 
 module.exports = Transactions;
