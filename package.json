@@ -19,6 +19,7 @@
     "method-override": "1.0.x",
     "multiline": "^1.0.0 ",
     "mysql": "^2.5.0",
+    "orm": "^2.1.19",
     "passport": "~0.1.17",
     "passport-local": "~0.1.6",
     "rootpath": "0.1.2"
