@@ -25,4 +25,4 @@ db.sync( function(err) {
   !err && console.log("Synced database!");
 });
 
-modules.exports = models;
+module.exports = models;
