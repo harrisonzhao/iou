@@ -1,6 +1,7 @@
 'use strict';
 (require('rootpath')());
 
+var async = require('async');
 var db = require('config/orm');
 
 var Rooms = db.define('rooms', {
@@ -12,18 +13,49 @@ var Rooms = db.define('rooms', {
   methods : {
     addUser : function(user, callback) {
       var that = this;
-      this.addUsers(user, function(err) {
-        if (err) callback(new Error("Error adding user"), that);
-        else {
-          that.is_empty = 0;
-          that.save();
-          callback(err, that);
+      async.waterfall(
+      [
+        function(callback) {
+          that.addUsers(user, function(err) {
+            if (err) { callback(err); }
+            else {
+              that.is_empty = 0;
+              callback(null);
+            }
+          });
+        },
+        function(callback) {
+          that.save(function(err) {
+            callback(err, that);
+          });
         }
-      });
-
+      ],
+      callback);
     },
-    removeUser : function(user, callback) {
 
+    removeUser : function(user, callback) {
+      var that = this;
+      async.waterfall(
+      [
+        function(callback) {
+          that.removeUsers(user, callback);
+        },
+        function(callback) {
+          that.getUsers(function(err, users) {
+            if (err) { callback(err); }
+            else {
+              if (users.length === 0) that.is_empty = 1;
+              callback(null);
+            }
+          });
+        },
+        function(callback) {
+          that.save(callback);
+        }
+      ],
+      function(err) {
+        callback(err, that);
+      });
     }
   }
 });
