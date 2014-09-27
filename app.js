@@ -14,10 +14,10 @@ var models = require('models/models');
 // app.get('/login/', staticPages.renderLogin);
 // app.get('/signup', staticPages.renderSignup);
 
-var auth = require('controllers/auth');
-app.get('/logout', auth.logout);
+//var auth = require('controllers/auth');
+//app.get('/logout', auth.logout);
 
-app.all('*', auth.checkLoggedIn);
+//app.all('*', auth.checkLoggedIn);
 
 // app.get('*', staticPages.serve404);
 
