@@ -4,7 +4,7 @@ require('rootpath')();
 var LocalStrategy = require('passport-local').Strategy;
 var async = require('async');
 var bcrypt = require('bcryptjs');
-var User = require('models/User');
+var User = require('models/Users');
 
 function localLoginVerifyCallback(email, password, done) {
   User.one(
