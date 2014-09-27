@@ -11,6 +11,11 @@ var Rooms = db.define('rooms', {
 }, {
   methods : {
     addUser : function(user) {
+      var that = this;
+      this.addUsers(user, function(err) {
+        if (err) console.log("Error adding user");
+        else that.is_empty = 0;
+      });
 
     },
     removeUser : function(user) {
@@ -28,11 +33,7 @@ Rooms.newRoom = function(name, creator, callback) {
   };
 
   this.create(room, function(err, result) {
-    if (err) {
-      console.log("Error creating new room: " + name);
-    } else {
-      result.addUser(creator);
-    }
+    if (!err) result.addUser(creator);
   
     callback(err, result);
   });
