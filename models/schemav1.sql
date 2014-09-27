@@ -9,6 +9,7 @@ CREATE TABLE IF NOT EXISTS users (
   last_name VARCHAR(20) NOT NULL,
   email VARCHAR(45) NOT NULL UNIQUE,
   password_hash VARCHAR(60) NOT NULL,
+  is_admin BOOLEAN NOT NULL DEFAULT 0,
   PRIMARY KEY (user_id)
 );
 

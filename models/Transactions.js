@@ -8,7 +8,7 @@ var Transactions = db.define('transactions', {
   value          : { type: "integer", required: true },
   reason         : { type: "text", size: 140, required: true },
   created_time   : { type: "date", required: true },
-  approved_time  : { type: "date", defaultValue: null}
+  approved_time  : { type: "date", defaultValue: null }
 }, {
   methods : {
 
