@@ -1,0 +1,1 @@
+Add static assets here
