@@ -1,6 +1,6 @@
-#USE infcsAlQ0HlL9eeC;
+#USE iouuomeA14Hvih1b;
 
-#DROP DATABASE infcsAlQ0HlL9eeC;
+#DROP DATABASE iouuomeA14Hvih1b;
 
 #DROP TABLE IF EXISTS Users;
 CREATE TABLE IF NOT EXISTS users (

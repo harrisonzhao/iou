@@ -1,68 +1,32 @@
-/*'use strict';
+'use strict';
 require('rootpath')();
 
 var LocalStrategy = require('passport-local').Strategy;
 var User = require('models/User');
 
 function localLoginVerifyCallback(email, password, done) {
-  User.get(email)
-  process.nextTick(function() {
-    User.findOne(
-      {'local.email': email}, 
-      function(err, user) {
-        if (err) {
-          return done(err);
-        }
-        //no user found
-        if (!user) {
-          return done(null, false, { message: 'No user found.' });
-        }
-        if (!user.validPassword(password)) {
-          return done(null, false, { message: 'Oops! Wrong password.' });
-        } else {
-          return done(null, user);
-        }
-      });
-  });
+  User.one(
+    {email: email}, 
+    function(err, result) {
+      if (err) { return done(err); }
+      if (!result || !result.validPassword(password)) { 
+        return done(null, false, { message: 'Invalid email and password combination' });
+      }
+      return done(null, result);
+    });
 }
 
 function localSignupVerifyCallback(email, password, done) {
-
-  var findUserCallback = function(err, user) {
-    if (err) {
-      return done(err);
-    }
-
-    // check to see if theres already a user with that email
-    // else create the user
-    if (user) {
-      return done(null, false, {message: 'That email is already taken.'});
-    } else {
-      var newUser = new User();
-      newUser.local.email = email;
-      newUser.local.password = newUser.generateHash(password);
-      newUser.save(function(err) {
-        if (err) { return done(err); }
-        return done(null, newUser);
-      });
-    }
-  };
-
-  process.nextTick(function() {
-    // check if the user is already logged in
-    if (!req.user) {
-      User.findOne({'local.email':  email}, findUserCallback);
-    } else {
-      var user = req.user;
-      user.local.email = email;
-      user.local.password = user.generateHash(password);
-      user.save(function(err) {
-        if (err) { return done(err); }
-        return done(null, user);
-      });
-    }
-  });
-}*/
+  User.one(
+    {email: email}, 
+    function(err, result) {
+      if (err) { return done(err); }
+      if (result) { 
+        return done(null, false, { message: 'Email already exists' });
+      }
+      return done(null, result);
+    });
+}
 
 
 module.exports = function(passport) {
@@ -86,7 +50,8 @@ module.exports = function(passport) {
   // Local signup strategy
   passport.use('local-signup', new LocalStrategy({
     usernameField: 'email',
-    passwordField: 'password'
+    passwordField: 'password',
+    passReqToCallback : true
   },
   localSignupVerifyCallback));
 
