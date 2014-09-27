@@ -28,8 +28,7 @@ function localSignupVerifyCallback(req, email, password, done) {
       });
     },
     function(callback) {
-      var user = User.createUser(req.body.firstName, req.body.lastName, email, password);
-      User.create(user, callback);
+      User.create(req.body.firstName, req.body.lastName, email, password, callback);
     },
     function(callback) {
       User.one({email: email}, callback);
