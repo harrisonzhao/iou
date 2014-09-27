@@ -2,6 +2,7 @@
 (require('rootpath')());
 
 var db = require('config/orm');
+var async = require('async');
 
 var Transactions = db.define('transactions', {
   transaction_id : { type: "serial", key: true }, // autoincrementing primary key
@@ -14,8 +15,28 @@ var Transactions = db.define('transactions', {
     approve : function() {
 
     },
-    linkRelations : function(room, source, sink) {
-
+    /**
+     * @param  {obj}   room     [description]
+     * @param  {obj}   source   [description]
+     * @param  {obj}   sink     [description]
+     * @param  {Function} callback
+     * args: err
+     */
+    linkRelations : function(room, source, sink, callback) {
+      var that = this;
+      async.parallel(
+      [
+        function(callback) {
+          that.setRoom(room, callback);
+        },
+        function(callback) {
+          that.setSource(source, callback);
+        },
+        function(callback) {
+          that.setSink(sink, callback);
+        }
+      ],
+      callback);
     }
   }
 });

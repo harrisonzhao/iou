@@ -13,8 +13,9 @@ var Rooms = db.define('rooms', {
     addUser : function(user, callback) {
       var that = this;
       this.addUsers(user, function(err) {
-        if (err) callback(new Error("Error adding user"), that);
-        else {
+        if (err) {
+          callback(new Error("Error adding user"), that);
+        } else {
           that.is_empty = 0;
           that.save();
           callback(err, that);
@@ -37,8 +38,11 @@ Rooms.newRoom = function(name, creator, callback) {
   };
 
   this.create(room, function(err, result) {
-    if (!err) result.addUser(creator, callback);
-    else callback(err, result);
+    if (!err) {
+      result.addUser(creator, callback);
+    } else {
+      callback(err, result);
+    }
   });
 };
 

@@ -27,3 +27,8 @@ var registry = require('controllers/registry');
 app.listen(configs.settings.secrets.port);
 console.log('listening on port ' + configs.settings.secrets.port);
 
+//login/landing page
+//signup
+//rooms
+//graph
+//add for transaction
