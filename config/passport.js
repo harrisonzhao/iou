@@ -3,6 +3,7 @@ require('rootpath')();
 
 var LocalStrategy = require('passport-local').Strategy;
 var async = require('async');
+var bcrypt = require('bcryptjs');
 var User = require('models/User');
 
 function localLoginVerifyCallback(email, password, done) {
@@ -11,7 +12,7 @@ function localLoginVerifyCallback(email, password, done) {
     function(err, result) {
       if (err) { return done(err); }
       if (!result || !result.validPassword(password)) { 
-        return done(null, false, { message: 'Invalid email and password combination' });
+        return done(null, false, {message: 'invalid email and password combination'});
       }
       return done(null, result);
     });
@@ -20,28 +21,24 @@ function localLoginVerifyCallback(email, password, done) {
 function localSignupVerifyCallback(req, email, password, done) {
   async.waterfall(
   [
+    function(callback) {
+      User.one({email: email}, function(err, user) {
+        if (user) { return done(null, false, {message: 'email already taken'}); }
+        callback(null);
+      });
+    },
+    function(callback) {
+      var user = User.createUser(req.body.firstName, req.body.lastName, email, password);
+      User.create(user, callback);
+    },
+    function(callback) {
+      User.one({email: email}, callback);
+    }
   ],
   function(err, result) {
-
+    if (err) { return done(err); }
+    done(null, result);
   });
-  User.one(
-    {email: email}, 
-    function(err, result) {
-      if (err) { return done(err); }
-      if (result) { 
-        return done(null, false, { message: 'Email already exists' });
-      }
-      var user = {};
-      user.email = email;
-      user.first_name = req.body.firstName;
-      user.last_name = req.body.last_name;
-      user.password = password;
-      user.is_admin = false;
-      User.create(user, function(err, result) {
-        if (err) { return done(err); }
-
-      })
-    });
 }
 
 

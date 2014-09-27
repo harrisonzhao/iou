@@ -40,7 +40,7 @@ var config = {
     app.use(session({
       secret: settings.secrets.sessionSecret,
       key: 'sid', 
-      cookie: { secure: true }
+      cookie: { secure: false }
     }));
     app.use(flash());
     app.use(passport.initialize());
