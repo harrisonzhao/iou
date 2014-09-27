@@ -8,10 +8,10 @@ var User = require('models/Users');
 
 function localLoginVerifyCallback(email, password, done) {
   User.one(
-    {email: email}, 
+    {email: email},
     function(err, result) {
       if (err) { return done(err); }
-      if (!result || !result.validPassword(password)) { 
+      if (!result || !result.validPassword(password)) {
         return done(null, false, {message: 'invalid email and password combination'});
       }
       return done(null, result);
@@ -28,7 +28,7 @@ function localSignupVerifyCallback(req, email, password, done) {
       });
     },
     function(callback) {
-      User.create(req.body.firstName, req.body.lastName, email, password, callback);
+      User.newUser(req.body.firstName, req.body.lastName, email, password, callback);
     },
     function(callback) {
       User.one({email: email}, callback);
@@ -67,4 +67,4 @@ module.exports = function(passport) {
   },
   localSignupVerifyCallback));
 
-};       
+};
