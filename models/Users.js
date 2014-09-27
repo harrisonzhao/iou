@@ -24,7 +24,7 @@ Users.newUser = function(firstName, lastName, email, password, callback) {
     first_name: firstName,
     last_name: lastName,
     email: email,
-    password: bcrypt.hashSync(password, 8),
+    password_hash: bcrypt.hashSync(password, 8),
     is_admin: false
   };
   this.create(user, callback);
