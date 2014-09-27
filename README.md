@@ -23,7 +23,7 @@ node app.js
 ```
 
 HOW TO ACCESS DATABASE (need mysql client):
-mysql --host=us-cdbr-azure-east-a.cloudapp.net --user=b522e363b6ec6a --password=c4e9977f infcsAlQ0HlL9eeC
+mysql --host=us-cdbr-azure-east-a.cloudapp.net --user=b6bf084c45dab9 --password=c2bed79d iouuomeA14Hvih1b
 
 Project Structure
 -----------------

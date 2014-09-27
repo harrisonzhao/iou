@@ -1,7 +1,7 @@
 'use strict';
 var multiline = require('multiline');
 
-var bcrypt = require('bcrypt');
+var bcrypt = require('bcryptjs');
 //must load db.js instead of configs.js to avoid circular referencing
 var connection = require('config/db');
 
