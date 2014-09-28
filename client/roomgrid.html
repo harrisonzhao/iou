@@ -17,6 +17,7 @@
 
     <!-- Custom CSS -->
     <link href="css/grayscale.css" rel="stylesheet">
+    <link href="css/room.css" rel="stylesheet">
 
     <!-- Custom Fonts -->
     <link href="font-awesome-4.1.0/css/font-awesome.min.css" rel="stylesheet" type="text/css">
@@ -24,30 +25,23 @@
     <link href="http://fonts.googleapis.com/css?family=Montserrat:400,700" rel="stylesheet" type="text/css">
   </head>
 
-  <body id="page-top" data-spy="scroll" data-target=".navbar-fixed-top">
-
-    <!-- Navigation -->
-    <nav class="navbar navbar-custom navbar-fixed-top top-nav-collapse" role="navigation">
-        <div class="container">
-            <div class="navbar-header">
-                <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-main-collapse">
-                    <i class="fa fa-bars"></i>
-                </button>
-                <a class="navbar-custom navbar-brand page-scroll" href="#page-top">
-                    <i class="fa fa-play-circle"></i> IOU
-                </a>
+  <body>
+    <table>
+      <tr>
+        <td>
+          <div id="add" class="room">
+            <span id="plus-sign" class="glyphicon glyphicon-plus"></span>
+          </div>
+        </td>
+        <td>
+          <div class="room">
+            <div class="room-img"></div>
+            <div class="room-bottom">
+              <h4 class="room-name">Apartment</h3>
             </div>
-
-            <!-- Collect the nav links, forms, and other content for toggling -->
-            <div class="collapse navbar-collapse navbar-right navbar-main-collapse">
-              <div class="nav navbar-text navbar-right">
-                <p><a href="mainpage.html">Hi, Bobby.</a></p>
-              </div>
-            </div>
-            <!-- /.navbar-collapse -->
-        </div>
-        <!-- /.container -->
-    </nav>
-
+          </div>
+        </td>
+      </tr>
+    </table>
   </body>
 </html>
