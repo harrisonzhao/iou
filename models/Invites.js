@@ -40,8 +40,9 @@ var Invites = db.define('invites', {
             that.complete = 1;
             that.save(callback);
           }
-        ],
-        callback);
+        ], function(err, result) {
+          callback(err);
+        });
       }
     },
 
@@ -49,7 +50,7 @@ var Invites = db.define('invites', {
      * @param  {obj} room
      * @param  {obj} receiver
      * @param  {Function} callback
-     * args err
+     * args err, invite
      */
     linkRelations : function(room, receiver, callback) {
       var that = this;
@@ -58,11 +59,10 @@ var Invites = db.define('invites', {
         function(callback) {
           that.setRoom(room, callback);
         },
-        function(callback) {
+        function(result, callback) {
           that.setReceiver(receiver, callback);
         }
-      ],
-      callback);
+      ], callback);
     }
   }
 });
@@ -100,9 +100,7 @@ Invites.newInvite = function(room, user, callback) {
     function(result, callback) {
       result.linkRelations(room, user, callback);
     }
-  ], function(err) {
-    callback(err, that);
-  });
+  ], callback);
 };
 
 module.exports = Invites;

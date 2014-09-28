@@ -26,16 +26,25 @@ var Transactions = db.define('transactions', {
             that.approved_time = new Date();
             that.save(callback);
           },
-          function(callback) {
+          function(result, callback) {
             that.getRoom(callback);
           },
           function(room, callback) {
-            graph.addTransaction(room.graph, that);
+            that.getSource(function(err, source) {
+              callback(err, room, source);
+            });
+          },
+          function(room, source, callback) {
+            that.getSink(function(err, sink) {
+              callback(err, room, source, sink);
+            });
+          },
+          function(room, source, sink, callback) {
+            graph.addTransaction(room.graph, that, source, sink);
             room.graph = JSON.parse(JSON.stringify(room.graph));
             room.save(callback);
           }
-        ],
-        callback);
+        ], callback);
       }
     },
 
@@ -44,7 +53,7 @@ var Transactions = db.define('transactions', {
      * @param  {obj}   source   [description]
      * @param  {obj}   sink     [description]
      * @param  {Function} callback
-     * args: err
+     * args: err, transaction
      */
     linkRelations : function(room, source, sink, callback) {
       var that = this;
@@ -53,10 +62,10 @@ var Transactions = db.define('transactions', {
         function(callback) {
           that.setRoom(room, callback);
         },
-        function(callback) {
+        function(result, callback) {
           that.setSource(source, callback);
         },
-        function(callback) {
+        function(result, callback) {
           that.setSink(sink, callback);
         }
       ], callback);
@@ -82,27 +91,24 @@ Transactions.newTransaction = function(room, source, sink, value, reason, callba
     function(callback) {
       source.hasRooms(room, function(err, inRoom) {
         if (err) { return callback(err); }
-        if (inRoom) callback(new Error("Source not in room"));
+        if (!inRoom) callback(new Error("Source not in room"));
         else callback(null);
       });
     },
     function(callback) {
       sink.hasRooms(room, function(err, inRoom) {
         if (err) { return callback(err); }
-        if (inRoom) callback(new Error("Sink not in room"));
+        if (!inRoom) callback(new Error("Sink not in room"));
         else callback(null);
       });
     },
     function(callback) {
-      this.create(transaction, callback);
+      that.create(transaction, callback);
     },
-    function(err, result) {
-      if (err) callback(err, result);
-      else result.linkRelations(room, source, sink, callback);
+    function(result, callback) {
+      result.linkRelations(room, source, sink, callback);
     }
-  ], function(err) {
-    callback(err, that);
-  });
+  ], callback);
 };
 
 module.exports = Transactions;

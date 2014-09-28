@@ -36,10 +36,7 @@ var Rooms = db.define('rooms', {
           that.graph = JSON.parse(JSON.stringify(that.graph));
           that.save(callback);
         }
-      ],
-      function(err) {
-        callback(err, that);
-      });
+      ], callback);
     },
 
     /**
@@ -71,10 +68,7 @@ var Rooms = db.define('rooms', {
         function(callback) {
           that.save(callback);
         }
-      ],
-      function(err) {
-        callback(err, that);
-      });
+      ], callback);
     }
   }
 });
