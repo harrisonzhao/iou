@@ -14,7 +14,7 @@ var Invites = db.define('invites', {
      * args: err, invite
      */
     completeInvite : function(callback) {
-      if (this.complete === 0) {
+      if (!this.complete) {
         var that = this;
 
         async.waterfall(
