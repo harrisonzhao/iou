@@ -4,15 +4,14 @@ var createRoom = function (event) {
   $.post('/rooms/new', {
     roomName: $('#name').val()
   }, function (room) {
-    console.log(room);
-    _.each($('#emails').val().split(" "), function (email) {
-      console.log(email);
+    $.when.apply($, _.each($('#emails').val().split(" "), function (email) {
       $.post('/invites/new', {
         roomId: room.roomId,
         email: email
-      })
-      location.reload();
-    })
+      }).done(function() {
+        location.reload();
+      });
+    }))
   })
 }
 
