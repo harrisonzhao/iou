@@ -21,16 +21,44 @@ app.all('*', auth.checkLoggedIn);
 app.get('/logout', auth.logout);
 
 var api = require('controllers/api');
+
+app.get('/invites', api.getInvites);
+app.post('/invites/new', api.sendInviteForRoom);
+// app.post('/invites/accept', api.acceptInvites);
+
 app.get('/rooms', api.getRooms);
+app.post('/rooms/new', api.createRoom);
+app.post('/rooms/leave', api.leaveRoom);
 
-var models = require('models/models');
-// models.Users.newUser('abc', 'def', 'hij', 'klm', function(err, result) {
+app.get('/transactions', api.getRoomTransactionHistory);
+app.get('/transactions/pending', api.getUserPendingTransactions);
+app.post('/transactions/new', api.requestTransaction);
+app.post('/transactions/approve', api.approveTransaction);
+
+// var models = require('models/models');
+// models.Users.newUser('Pusheen', 'the Cat', 'pusheen@pusheen.cat', 'asdf', function(err, result) {
 //   console.log(err ? err : result);
-// })
+// });
 
-// models.Users.one({first_name : "Rene"}, function(err, result) {
-//   models.Rooms.newRoom("pusheen", result, function(err, result) {
-//     console.log("Hello");
+// models.Users.one({email : "pusheen@pusheen.cat"}, function(err, user) {
+//   models.Rooms.one({name : "pusheen"}, function(err, room) {
+//     models.Invites.newInvite(room, user, function(err, invite) {
+//       if (err) console.log(err);
+//     });
+//   });
+// });
+
+// models.Invites.one({receiver_user_id : 111}, function(err, invite) {
+//   invite.completeInvite(function(err) {
+//     if (err) console.log(err);
+//   });
+// });
+
+// models.Users.one({first_name : "abc"}, function(err, user) {
+//   models.Rooms.one({name : "pusheen"}, function(err, room) {
+//     models.Invites.newInvite(room, user, function(err, invite) {
+//       if (err) console.log(err);
+//     });
 //   });
 // });
 
