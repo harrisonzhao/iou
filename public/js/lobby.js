@@ -11,6 +11,7 @@ var createRoom = function (event) {
         roomId: room.roomId,
         email: email
       })
+      location.reload();
     })
   })
 }
