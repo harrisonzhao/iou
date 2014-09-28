@@ -44,12 +44,24 @@ exports.sendInviteForRoom = function(req, res, next) {
     },
     function(otherUser, room, callback) {
       Invites.newInvite(room, otherUser, callback);
+    },
+    //for now default accept invite
+    function(invite, callback) {
+      invite.acceptInvite(callback);
     }
+  ],
+  function(err) {
+    if (err) { return next(err); }
+    res.sendStatus(200);
+  });
+/*
+//supposed to accept invite
   ],
   function(err, newInvite) {
     if (err) { return next(err); }
     res.sendStatus(200);
   });
+*/
 }
 
 //post req
@@ -208,9 +220,18 @@ exports.requestTransaction = function(req, res, next) {
       } else {
         callback(new Error('cannot have 0 value'));
       }
+      Transactions.newTransaction(room, source, sink, value, req.body.reason, callback);
+    },
+    /*
+      //original here cuts off waterfall
+      //now auto accepts transaction
       Transactions.newTransaction(room, source, sink, value, req.body.reason, function(err, result) {
         callback(err);
       });
+    }, */
+    //automatically approved for now
+    function(transaction, callback) {
+      transaction.approve(callback);
     }
   ],
   //result not used
