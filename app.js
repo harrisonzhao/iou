@@ -14,6 +14,7 @@ app.get('/signup', registry.renderSignup);
 app.get('/login', registry.renderLogin);
 app.get('/profile', registry.renderProfile);
 app.get('/graph', registry.renderGraph);
+app.get('/lobby', registry.renderLobby);
 
 var auth = require('controllers/auth');
 app.post('/login', auth.localLogin);
