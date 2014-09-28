@@ -7,14 +7,14 @@ exports.renderIndex = function(req, res) {
 }
 
 exports.renderLogin = function(req, res) {
-  //req.user ? 
-  //  res.redirect('/profile') :
+  req.user ? 
+    res.redirect('/profile') :
     res.render('registry/login', {error: req.flash('error')});
 }
 
 exports.renderSignup = function(req, res) {
-  //req.user ? 
-  //res.redirect('/profile') :
+  req.user ? 
+    res.redirect('/profile') :
     res.render('registry/signup', {error: req.flash('error')});
 }
 
