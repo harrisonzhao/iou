@@ -1,8 +1,8 @@
 'use strict';
 (require('rootpath')());
 
-var db = require('config/orm');
 var async = require('async');
+var db = require('config/orm');
 
 var Transactions = db.define('transactions', {
   transaction_id : { type: "serial", key: true }, // autoincrementing primary key

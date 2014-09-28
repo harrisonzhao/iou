@@ -14,10 +14,36 @@ var Invites = db.define('invites', {
      * args: err, invite
      */
     completeInvite : function(callback) {
-      this.complete = 1;
-      this.save(function(err) {
-        callback(err, this);
-      });
+      if (this.complete === 0) {
+        var that = this;
+
+        async.waterfall(
+        [
+          function(callback) {
+            that.getRoom(callback);
+          },
+          function(room, callback) {
+            that.getReceiver(function(err, receiver) {
+              callback(err, room, receiver);
+            });
+          },
+          function(room, receiver, callback) {
+            receiver.hasRooms(room, function(err, inRoom) {
+              callback(err, inRoom, receiver, room);
+            });
+          },
+          function(inRoom, receiver, room, callback) {
+            if (inRoom) callback(new Error("User already in room"), room);
+            else room.addUser(receiver, callback);
+          },
+          function(room, callback) {
+            that.complete = 1;
+            that.save(callback);
+          }
+        ], function(err) {
+          callback(err, that);
+        });
+      }
     },
 
     /**
