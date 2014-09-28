@@ -234,8 +234,23 @@ function switchGraph() {
   }
 }
 
-$.get('/rooms', null, function (data) { userId = data.id; room = data.rooms[0]; // Need to change this to suit appropriate room
-  
+$.get('/rooms', null, function (data) { 
+
+  //quick hack linear search optimally only query for given room id
+  var userId = data.id;  // Need to change this to suit appropriate room
+  //var room = data.rooms[0];
+  //last elem should be id of room
+  console.log(data.rooms);
+  var pathArray = window.location.pathname.split( '/' );
+  var roomId = pathArray[pathArray.length - 1];
+  var room, i;
+  for (i = 0; i !== data.rooms.length; ++i) {
+    if (roomId === data.rooms[i].room_id) {
+      room = data.rooms[i];
+      console.log(room);
+      break;
+    }
+  }
   user = room.graph[userId];
   user.id = userId;
   owee = user.worth > 0;

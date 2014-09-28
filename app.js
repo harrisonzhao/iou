@@ -13,7 +13,10 @@ app.get('/', registry.renderIndex);
 app.get('/signup', registry.renderSignup);
 app.get('/login', registry.renderLogin);
 app.get('/profile', registry.renderProfile);
-app.get('/graph', registry.renderGraph);
+app.get('/room/:id', function(req, res) {
+  res.redirect('/graph/' + req.params.id);
+});
+app.get('/graph/:id', registry.renderGraph);
 
 var auth = require('controllers/auth');
 app.post('/login', auth.localLogin);
