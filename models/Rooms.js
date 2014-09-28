@@ -49,6 +49,9 @@ var Rooms = db.define('rooms', {
       async.waterfall(
       [
         function(callback) {
+          //!!!!!!!!!!!!!
+          //PUT FUNCTION HERE TO CHECK IF NET WORTH == 0
+          //!!!!!!!!!!
           that.removeUsers(user, callback);
         },
         function(callback) {

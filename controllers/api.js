@@ -10,14 +10,32 @@ var Invites = models.Invites;
 //get req
 //send invite to an email
 //need email
-exports.sendInvite = function(req, res, next) {
+//need roomId
+exports.sendInviteForRoom = function(req, res, next) {
+  var roomId = parseInt(req.query.roomId);
+  var getRoomAndOtherUser = function(callback) {
+    async.parallel(
+    [
+      function(callback) {
+        Users.one({email: req.query.email}, callback);
+      },
+      function(callback) {
+        Rooms.get(roomId, callback);
+      }
+    ],
+    callback);
+  };
   async.waterfall(
   [
     function(callback) {
-
+      getRoomAndOtherUser(function(err, results) {
+        //[0] is user
+        //[1] is room
+        callback(err, results[0], results[1]);
+      });
     },
-    function(callback) {
-
+    function(otherUser, room, callback) {
+      Invites.newInvite(room, otherUser, callback);
     }
   ],
   function(err) {
@@ -45,8 +63,22 @@ exports.getRooms = function(req, res, next) {
 }
 
 //get req
+//need roomId
 exports.leaveRoom = function(req, res, next) {
-  
+  var roomId = parseInt(req.query.roomId);
+  async.waterfall(
+  [
+    function(callback) {
+      Rooms.get(roomId, callback);
+    },
+    function(room, callback) {
+      room.removeUser(req.user, callback);
+    }
+  ],
+  function(err) {
+    if (err) { return next(err); }
+    res.sendStatus(200);
+  });
 }
 
 //get req
