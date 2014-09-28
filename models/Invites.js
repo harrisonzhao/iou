@@ -9,19 +9,36 @@ var Invites = db.define('invites', {
   complete  : { type: "boolean", required: true, defaultValue: 0 },
 }, {
   methods : {
-    completeInvite : function() {
+    /**
+     * @param  {Function} callback
+     * args: err, invite
+     */
+    completeInvite : function(callback) {
       this.complete = 1;
       this.save(function(err) {
-        if (err) console.log("Error saving invitation");
+        callback(err, this);
       });
     },
 
-    linkRelations : function(room, receiver) {
-      this.setRoom(room, function(err) {
-        if (err) console.log("Error linking invite to room");
-      });
-      this.setReceiver(receiver, function(err) {
-        if (err) console.log("Error linking invite to room");
+    /**
+     * @param  {obj} room
+     * @param  {obj} receiver
+     * @param  {Function} callback
+     * args err, invite
+     */
+    linkRelations : function(room, receiver, callback) {
+      var that = this;
+      async.waterfall(
+      [
+        function(callback) {
+          that.setRoom(room, callback);
+        },
+        function(callback) {
+          that.setReceiver(receiver, callback);
+        }
+      ],
+      function(err) {
+        callback(err, that);
       });
     }
   }
@@ -32,27 +49,36 @@ Invites.newInvite = function(room, user, callback) {
     complete : 0
   };
 
+  var that = this;
   async.waterfall(
   [
     function(callback) {
-      this.count({room_room_id: room.room_id, receiver_user_id: user.user_id}, function(err, count) {
+      user.hasRooms(room, function(err, inRoom) {
         if (err) { return callback(err); }
-        if (count) {
-          callback(new Error('one too many!'));
-        } else {
-          callback(null);
-        }
+        if (inRoom) callback(new Error("User already in room"));
+        else callback(null);
       });
     },
     function(callback) {
-      this.create(invite, callback);
+      that.count(
+        {
+          room_room_id: room.room_id,
+          receiver_user_id: user.user_id
+        },
+        function(err, count) {
+          if (err) { return callback(err); }
+          if (count) callback(new Error('Invite already exists for this user'));
+          else callback(null);
+        });
+    },
+    function(callback) {
+      that.create(invite, callback);
+    },
+    function(result, callback) {
+      result.linkRelations(room, user, callback);
     }
   ],
-  function(err, result) {
-    if (err) { return callback(err); }
-    result.linkRelations(room, user);
-    callback(null, result);
-  });
+  callback);
 };
 
 module.exports = Invites;

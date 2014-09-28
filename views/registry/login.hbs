@@ -1,59 +1,46 @@
-<!DOCTYPE html>
-<html lang="en">
+<!doctype html>
+<html>
 <head>
-  <meta http-equiv="content-type" content="text/html; charset=UTF-8">
-  <meta charset="utf-8">
-  <title>Login</title>
-  <meta name="generator" content="Bootply" />
-  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
-  <link href="css/lib/bootstrap/bootstrap.min.css" rel="stylesheet">
-    <!--[if lt IE 9]>
-      <script src="//html5shim.googlecode.com/svn/trunk/html5.js"></script>
-      <![endif]-->
-      <link href="/css/registry/registry.css" rel="stylesheet">
-    </head>
-    <body>
-      <!--login modal-->
-      <div id="loginModal" class="modal show" tabindex="-1" role="dialog" aria-hidden="true">
-        <div class="modal-dialog">
-          <div class="modal-content">
-            <div class="modal-header">
-              <!-- remove close button for now -->
-              <!-- <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button> -->
-              <h1 class="text-center">Login</h1>
-            </div>
-            <div class="modal-body">
-              <form id="login-form" class="form col-md-12 center-block">
-                <div class="form-group">
-                  <input id="username" type="username" class="form-control input-lg" placeholder="Username">
-                </div>
-                <div class="form-group">
-                  <input id="password" type="password" class="form-control input-lg" placeholder="Password">
-                </div>
-                <div class="form-group">
-                  <button id="submit-login" class="btn btn-primary btn-lg btn-block">Sign In</button>
-                  <!--Remove need help-->
-                  <span class="pull-right"><a href="/signup">Signup</a></span>
+  <title>Node Authentication</title>
+  <link rel="stylesheet" href="//netdna.bootstrapcdn.com/bootstrap/3.0.2/css/bootstrap.min.css"> <!-- load bootstrap css -->
+  <link rel="stylesheet" href="//netdna.bootstrapcdn.com/font-awesome/4.0.3/css/font-awesome.min.css"> <!-- load fontawesome -->
+  <style>
+    body    { padding-top:80px; }
+  </style>
+</head>
+<body>
+<div class="container">
 
-                  <!-- show any messages that come back with authentication -->
-                  {{#if error}}
-                    <div class="alert alert-danger">{{error}}</div>
-                  {{/if}}
+<div class="col-sm-6 col-sm-offset-3">
 
-                </div>
-              </form>
-            </div>
-            <div class="modal-footer">
-              <!-- <div class="col-md-12">
-                <button class="btn" data-dismiss="modal" aria-hidden="true">Cancel</button>
-              </div> -->
-            </div>
-          </div>
-        </div>
-      </div>
-      <!-- script references -->
-      <script src="/js/jquery/jquery.min.js"></script>
-      <script src="/js/libModules/bootstrap.min.js"></script>
-      <script src="/js/registry/login.js"></script>
-    </body>
-    </html>
+  <h1><span class="fa fa-sign-in"></span> Login</h1>
+
+  <!-- show any messages that come back with authentication -->
+  {{#if error}}
+    <div class="alert alert-danger">{{error}}</div>
+  {{/if}}
+
+  <!-- LOGIN FORM -->
+  <form action="/login" method="post">
+    <div class="form-group">
+      <label>Email</label>
+      <input type="text" class="form-control" name="email">
+    </div>
+    <div class="form-group">
+      <label>Password</label>
+      <input type="password" class="form-control" name="password">
+    </div>
+
+    <button type="submit" class="btn btn-warning btn-lg">Login</button>
+  </form>
+
+  <hr>
+
+  <p>Need an account? <a href="/signup">Signup</a></p>
+  <p>Or go <a href="/">home</a>.</p>
+
+</div>
+
+</div>
+</body>
+</html>

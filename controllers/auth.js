@@ -5,36 +5,22 @@ var configs = require('config/configs');
 var passport = configs.passport;
 
 exports.checkLoggedIn = function(req, res, next) {
-  req.user ? next() : res.sendStatus(401);
+  req.user ? next() : res.redirect('/login');
 }
 
-exports.localSignup = function(req, res, next) {
-  passport.authenticate('local-signup', function(err, user, info) {
-    if (err) { return next(err); }
-    if (!user) { return res.send(404, info.message); }
-    req.logIn(user, function(err) {
-      if (err) { return next(err); }
-      res.sendStatus(200);
-    });
-  })(req, res, next);
-}
+exports.localSignup = passport.authenticate('local-signup', {
+  successRedirect: '/profile',
+  failureRedirect: '/signup',
+  failureFlash: true
+});
 
-exports.localLogin = function(req, res, next) {
-  passport.authenticate('local-login', function(err, user, info) {
-    if (err) { return next(err); }
-    if (!user) { return res.send(404, info.message); }
-    req.logIn(user, function(err) {
-      if (err) { return next(err); }
-      res.sendStatus(200);
-    });
-  })(req, res, next);
-}
+exports.localLogin = passport.authenticate('local-login', {
+  successRedirect: '/profile',
+  failureRedirect: '/login',
+  failureFlash: true
+});
 
-exports.logout = function(req, res, next) {
-  if (!req.user) {
-    res.sendStatus(401);
-  } else {
-    req.logout();
-    res.sendStatus(200);
-  }
+exports.logout = function(req, res) {
+  req.logout();
+  res.redirect('/');
 }
