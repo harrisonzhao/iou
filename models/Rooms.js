@@ -29,7 +29,11 @@ var Rooms = db.define('rooms', {
         },
         function(callback) {
           that.is_empty = 0;
-          that.graph.addUser(user);
+          graph.addUser(that.graph, user);
+          // This is because of javascript pointers
+          // orm saving does not recognize a change because the pointer has not changed
+          // to get around this, we stringify and parse
+          that.graph = JSON.parse(JSON.stringify(that.graph));
           that.save(callback);
         }
       ],
@@ -48,7 +52,7 @@ var Rooms = db.define('rooms', {
       async.waterfall(
       [
         function(callback) {
-          if (that.graph.checkWorth(user) === 0) that.removeUsers(user, callback);
+          if (graph.checkWorth(that.graph, user) === 0) that.removeUsers(user, callback);
           else callback(new Error("Worth not zero"));
         },
         function(callback) {
