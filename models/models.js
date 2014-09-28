@@ -8,11 +8,11 @@ var Transactions = require('./Transactions');
 var Invites = require('./Invites');
 
 Users.hasMany('rooms', Rooms, {}, { reverse: 'users' });
-Invites.hasOne('room', Rooms);
-Invites.hasOne('receiver', Users);
-Transactions.hasOne('room', Rooms);
-Transactions.hasOne('source', Users);
-Transactions.hasOne('sink', Users);
+Invites.hasOne('room', Rooms, { reverse: 'invites'});
+Invites.hasOne('receiver', Users, { reverse: 'invites'} );
+Transactions.hasOne('room', Rooms, { reverse: 'transactions'});
+Transactions.hasOne('source', Users, { reverse: 'asSource'});
+Transactions.hasOne('sink', Users, { reverse: 'asSink'});
 
 var models = {
   Users: Users,

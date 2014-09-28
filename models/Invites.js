@@ -13,7 +13,7 @@ var Invites = db.define('invites', {
      * @param  {Function} callback
      * args: err
      */
-    completeInvite : function(callback) {
+    acceptInvite : function(callback) {
       if (!this.complete) {
         var that = this;
 

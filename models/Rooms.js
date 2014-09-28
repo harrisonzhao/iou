@@ -23,14 +23,13 @@ var Rooms = db.define('rooms', {
       [
         function(callback) {
           that.addUsers(user, function(err) {
-            if (err) { callback(err); }
-            else {
-              that.is_empty = 0;
-              callback(null);
-            }
+            if (err) callback(err);
+            else callback(null);
           });
         },
         function(callback) {
+          that.is_empty = 0;
+          that.graph.addUser(user);
           that.save(callback);
         }
       ],
@@ -49,7 +48,8 @@ var Rooms = db.define('rooms', {
       async.waterfall(
       [
         function(callback) {
-          that.removeUsers(user, callback);
+          if (that.graph.checkWorth(user) === 0) that.removeUsers(user, callback);
+          else callback(new Error("Worth not zero"));
         },
         function(callback) {
           that.getUsers(function(err, users) {
@@ -78,7 +78,7 @@ Rooms.newRoom = function(name, creator, callback) {
   var room = {
     name     : name,
     is_empty : 1,
-    graph    : {} // TODO: modify this?
+    graph    : graph.newGraph()
   };
 
   this.create(room, function(err, result) {
