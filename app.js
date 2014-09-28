@@ -48,35 +48,48 @@ app.post('/transactions/new', api.requestTransaction); //need roomId, id of othe
 app.post('/transactions/approve', api.approveTransaction); //transactionId
 
 // var models = require('models/models');
+
+// var pay = function(room_id, email1, email2, value, reason) {
+//   models.Rooms.get(room_id, function(err, room) {
+//     models.Users.one({email : email1}, function(err, user1) {
+//       models.Users.one({email : email2}, function(err, user2) {
+//         models.Transactions.newTransaction(room, user1, user2, value, reason, function(err, trans) {
+//           if (err) console.log(err);
+//         });
+//       });
+//     });
+//   });
+// };
+
+// pay(21, 'asdf3', 'asdf', 500, 'stuff');
+
+// models.Transactions.one({transaction_id : 331}, function(err, trans) {
+//   trans.approve(function(err) {
+//     if (err) console.log(err);
+//   });
+// });
+
 // models.Users.newUser('Pusheen', 'the Cat', 'pusheen@pusheen.cat', 'asdf', function(err, result) {
 //   console.log(err ? err : result);
 // });
 
 // models.Users.one({email: "asdf"}, function(err, user) {
-//   models.Rooms.newRoom("Pusheen", user, function(err, room) {
+//   models.Rooms.newRoom("Pusheen3", user, function(err, room) {
 //     if (err) console.log(err);
 //   });
 // });
 
-// models.Users.one({email : "asdf2"}, function(err, user) {
-//   models.Rooms.one({name : "Pusheen"}, function(err, room) {
+// models.Users.one({email : "asdf3"}, function(err, user) {
+//   models.Rooms.one({room_id : 21}, function(err, room) {
 //     models.Invites.newInvite(room, user, function(err, invite) {
 //       if (err) console.log(err);
 //     });
 //   });
 // });
 
-// models.Invites.one({receiver_user_id : 111}, function(err, invite) {
-//   invite.completeInvite(function(err) {
+// models.Invites.one({invite_id : 51}, function(err, invite) {
+//   invite.acceptInvite(function(err) {
 //     if (err) console.log(err);
-//   });
-// });
-
-// models.Users.one({first_name : "abc"}, function(err, user) {
-//   models.Rooms.one({name : "pusheen"}, function(err, room) {
-//     models.Invites.newInvite(room, user, function(err, invite) {
-//       if (err) console.log(err);
-//     });
 //   });
 // });
 

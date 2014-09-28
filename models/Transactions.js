@@ -44,7 +44,9 @@ var Transactions = db.define('transactions', {
             room.graph = JSON.parse(JSON.stringify(room.graph));
             room.save(callback);
           }
-        ], callback);
+        ], function(err, result) {
+          callback(err);
+        });
       }
     },
 
