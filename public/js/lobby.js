@@ -8,7 +8,7 @@ var createRoom = function (event) {
     _.each($('#emails').val().split(" "), function (email) {
       console.log(email);
       $.post('/invites/new', {
-        roomId: room.id,
+        roomId: room.roomId,
         email: email
       })
     })

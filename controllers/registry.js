@@ -22,10 +22,6 @@ exports.renderProfile = function(req, res) {
   res.render('profile');
 }
 
-exports.renderLobby = function(req, res) {
-  res.render('oldviews/lobby');
-}
-
 exports.renderGraph = function(req, res) {
   res.render('oldviews/graph');
 }

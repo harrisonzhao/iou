@@ -14,7 +14,6 @@ app.get('/signup', registry.renderSignup);
 app.get('/login', registry.renderLogin);
 app.get('/profile', registry.renderProfile);
 app.get('/graph', registry.renderGraph);
-app.get('/lobby', registry.renderLobby);
 app.get('/room/:id', function(req, res) {
   res.redirect('/graph/' + req.params.id);
 });
