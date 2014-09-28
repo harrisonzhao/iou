@@ -90,7 +90,7 @@ exports.createRoom = function(req, res, next) {
   req.body.roomName = req.body.roomName || 'DEFAULT NAME';
   Rooms.create(req.body.roomName, req.user, function(err, result) {
     if (err) { return next(err); }
-    res.sendStatus(200);
+    res.send({roomId: result.room_id});
   })
 }
 

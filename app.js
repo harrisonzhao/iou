@@ -15,6 +15,10 @@ app.get('/login', registry.renderLogin);
 app.get('/profile', registry.renderProfile);
 app.get('/graph', registry.renderGraph);
 app.get('/lobby', registry.renderLobby);
+app.get('/room/:id', function(req, res) {
+  res.redirect('/graph/' + req.params.id);
+});
+app.get('/graph/:id', registry.renderGraph);
 
 var auth = require('controllers/auth');
 app.post('/login', auth.localLogin);
