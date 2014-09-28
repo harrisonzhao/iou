@@ -7,7 +7,34 @@ var Rooms = models.Rooms;
 var Transactions = models.Transactions;
 var Invites = models.Invites;
 
-//send invite
+//get req
+//send invite to an email
+//need email
+exports.sendInvite = function(req, res, next) {
+  async.waterfall(
+  [
+    function(callback) {
+
+    },
+    function(callback) {
+
+    }
+  ],
+  function(err) {
+
+  });
+}
+
+//get req
+//create room
+//needs roomName
+exports.createRoom = function(req, res, next) {
+  req.query.roomName = req.query.roomName || 'DEFAULT NAME';
+  Rooms.create(req.query.roomName, req.user, function(err, result) {
+    if (err) { return next(err); }
+    res.sendStatus(200);
+  })
+}
 
 //get req
 exports.getRooms = function(req, res, next) {
@@ -15,6 +42,30 @@ exports.getRooms = function(req, res, next) {
     if (err) { return next(err); }
     res.send(rooms);
   });
+}
+
+//get req
+exports.leaveRoom = function(req, res, next) {
+  
+}
+
+//get req
+//need roomId
+exports.getRoomTransactionHistory = function(req, res, next) {
+  var roomId = parseInt(req.query.roomId);
+  async.waterfall(
+  [
+    function(callback) {
+      Rooms.get(roomId, callback);
+    },
+    function(room, callback) {
+      room.getTransactions(callback);
+    }
+  ],
+  function(err, results) {
+    if (err) { return next(err); }
+    res.send(results);
+  })
 }
 
 //get req
@@ -109,8 +160,8 @@ exports.getUserPendingTransactions = function(req, res, next) {
             transaction.sink === req.user.user_id); 
         }, callback);
     },
-    function(filteredTransactions, callback) {
-      async.map(filteredTransactions, function(transaction, callback) {
+    function(transactions, callback) {
+      async.map(transactions, function(transaction, callback) {
         if (transaction.source === req.user.user_id) {
           transaction.isSource = true;
         } else {
@@ -125,4 +176,3 @@ exports.getUserPendingTransactions = function(req, res, next) {
     res.send(results);
   });
 }
-
