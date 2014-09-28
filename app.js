@@ -12,6 +12,7 @@ var registry = require('controllers/registry');
 app.get('/', registry.renderIndex);
 app.get('/signup', registry.renderSignup);
 app.get('/login', registry.renderLogin);
+app.get('/graph', registry.renderGraph);
 
 var auth = require('controllers/auth');
 app.post('/login', auth.localLogin);
