@@ -65,9 +65,30 @@ Transactions.newTransaction = function(room, source, sink, value, reason, callba
     return callback(new Error("sink equals source"));
   }
 
-  this.create(transaction, function(err, result) {
-    if (!err) result.linkRelations(room, source, sink, callback);
-    else callback(err, result);
+  var that = this;
+  async.waterfall(
+  [
+    function(callback) {
+      source.hasRooms(room, function(err, inRoom) {
+        if (err) { return callback(err); }
+        if (inRoom) callback(new Error("Source not in room"));
+        else callback(null);
+      });
+    },
+    function(callback) {
+      sink.hasRooms(room, function(err, inRoom) {
+        if (err) { return callback(err); }
+        if (inRoom) callback(new Error("Sink not in room"));
+        else callback(null);
+      });
+    },
+    function(callback) {
+      this.create(transaction, callback);
+    }
+  ],
+  function(err, result) {
+    if (err) callback(err, result);
+    else result.linkRelations(room, source, sink, callback);
   });
 };
 
