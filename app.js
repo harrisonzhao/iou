@@ -12,6 +12,7 @@ var registry = require('controllers/registry');
 app.get('/', registry.renderIndex);
 app.get('/signup', registry.renderSignup);
 app.get('/login', registry.renderLogin);
+app.get('/profile', registry.renderProfile);
 app.get('/graph', registry.renderGraph);
 
 var auth = require('controllers/auth');
@@ -39,11 +40,11 @@ app.get('/rooms', api.getRooms); //none needed!
 app.post('/rooms/leave', api.leaveRoom); //roomId
 
 //get transaction history for room with given roomId
-app.get('/transactions', api.getRoomTransactionHistory); //roomId
+app.get('/transactions', api.getRoomTransactionHistory); //roomId x
 //get all pending transactions for user (augments each transaction with isSource(specifies if user is source or not))
-app.get('/transactions/pending', api.getUserPendingTransactions); //none needed!
+app.get('/transactions/pending', api.getUserPendingTransactions); //none needed! x
 //request a transaction
-app.post('/transactions/new', api.requestTransaction); //need roomId, id of other user, value (charge amount), reason
+app.post('/transactions/new', api.requestTransaction); //need roomId, id of other user, value (charge amount), reason x
 //approve a transaction with given transactionId
 app.post('/transactions/approve', api.approveTransaction); //transactionId
 

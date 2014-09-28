@@ -19,7 +19,7 @@ exports.renderSignup = function(req, res) {
 }
 
 exports.renderProfile = function(req, res) {
-  res.render('profile', {user: req.user});
+  res.render('profile');
 }
 
 exports.renderGraph = function(req, res) {
