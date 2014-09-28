@@ -372,6 +372,7 @@ body {
 
 #transaction-history ul li {
     margin-bottom: 5px;
+    cursor: pointer;
 }
 
 #transaction-history ul li:hover {

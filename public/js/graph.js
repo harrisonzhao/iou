@@ -1,34 +1,11 @@
-$.get('/rooms', null, function (data) { console.log(data); })
-reducedData = {
-  users : [
-    { name: "Bobby", id: 1, value: 250 },
-    { name: "Rene", id: 2 , value: 150},
-    { name: "Cheng", id: 3, value: 150},
-    { name: "Harrison", id: 4, value: 100 },
-    { name: "Fukang", id: 5, value: 1500 },
-  ],
-  links : [
-    { id: 1, sourceId: 1, targetId: 2},
-    { id: 2, sourceId: 1, targetId: 3},
-    { id: 3, sourceId: 1, targetId: 4},
-  ]
-}
+var user;
+var room;
+var owee;
+var others;
+var users;
+var transactions;
 
-historData = {
-  users : [
-    { name: "Bobby" },
-    { name: "Rene" },
-    { name: "Cheng" },
-    { name: "Harrison" },
-    { name: "Fukang" }
-  ],
-  links : [
-    { id: 1, sourceId: 1, targetId: 2},
-    { id: 2, sourceId: 1, targetId: 3},
-    { id: 3, sourceId: 1, targetId: 4},
-  ],
-  selected : []
-}
+var selected = [] // Denotes the list of selected transactions in full mode
 
 var width = 760,
     height = 400;
@@ -43,27 +20,71 @@ var svg = d3.select("#svg-window").append("svg")
 var midX = width / 2,
     midY = height / 2;
 
-function setupFullGraph(users, links, radius) {
+function drawSelectedLinks(links_shown) {
 
+  svg.selectAll('line').remove();
+
+  svg.append("svg:defs").selectAll("marker")
+    .data(["arrow"])
+    .enter().append("svg:marker")
+      .attr("id", String)
+      .attr("viewBox", "0 -5 10 10")
+      .attr("refX", 20)
+      .attr("refY", 0)
+      .attr("markerWidth", 3)
+      .attr("markerHeight", 3)
+      .attr("orient", "auto")
+      .append("svg:path")
+      .attr("d", "M0,-5L10,0L0,5")
+      .style("stroke", 'transparent')
+      .style('fill', 'white');
+  
+  // Links
+  svg.selectAll("line")
+    .data(links_shown)
+    .enter()
+      .append("svg:line")
+      .attr("x1", function(d) { return d3.select('#user'+d.sourceId).attr('cx'); })
+      .attr("y1", function(d) { return d3.select('#user'+d.sourceId).attr('cy'); })
+      .attr("x2", function(d) { return d3.select('#user'+d.targetId).attr('cx'); })
+      .attr("y2", function(d) { return d3.select('#user'+d.targetId).attr('cy'); })
+      .attr("class", "link arrow")
+      .attr("marker-end", "url(#arrow)")
+      .style("stroke-width", 5)
+      .style("stroke", 'white');
+}
+
+function setupFullGraph(users, transactions, radius) {
+
+  // Reset view
   svg.selectAll('*').remove();
 
   $('#transaction-history ul').empty();
 
   // Populate History
-  links.forEach(function (link) {
+  transactions.forEach(function (transaction, i) {
+
+    selected = [] // reset selected links
+
+    // Create the element
     var element = document.createElement('li')
-    element.innerHTML = "Cheng owes Rene $10 because of dinner"
+    element.innerHTML = transaction.sourceName + " owes " + transaction.targetName + " $" + transaction.amount + " because of " + transaction.reason
     element.attributes.selected = false
+
+    // Listeners for element
     element.onclick = function() {
       element.attributes.selected = !element.attributes.selected
       if (element.attributes.selected) {
         element.className = 'selected'
+        selected.push(transaction)
       } else {
         element.className = ''
+        selected.splice(selected.indexOf(transaction), 1)
       }
+      drawSelectedLinks(selected)
     }
     element.onmouseover = function() {
-
+      drawSelectedLinks(selected.concat(transaction))
     }
     $('#transaction-history ul').append(element);
   })
@@ -75,7 +96,7 @@ function setupFullGraph(users, links, radius) {
   var node = svg.selectAll('.node').data(users)
     .enter().append('circle')
     .attr('id', function (d) { return 'user' + d.id; })
-    .attr('class', 'node')
+    .attr('class', 'users')
     .attr('r', 10)
     .attr('cx', function(d, i) {
       return Math.cos(radianIt(i)) * radius + midX;
@@ -83,12 +104,23 @@ function setupFullGraph(users, links, radius) {
     .attr('cy', function(d, i) {
       return Math.sin(radianIt(i)) * radius + midY;
     })
-    .style("fill", function(d, i) { return color(i); })
-    .style("stroke-width", 2)
-    .style("stroke", 'black');
+    .style("fill", function(d, i) { return (d.id === user.id) ? 'white' : color(i); })
+    .style("stroke-width", 1)
+    .style("stroke", 'white');
+
+  // Tooltips for Other Members
+  $('svg circle.users').tipsy({ 
+    fade: true,
+    gravity: 'n',
+    title: function() {
+      var d = this.__data__;
+      var name = d.name;
+      return 'Hi I\'m ' + name + '!'; 
+    }
+  });
 }
 
-function showReducedGraph(user, others, owee, radius, links) {
+function showReducedGraph(user, others, owee, radius) {
 
   svg.selectAll('*').remove();
 
@@ -97,8 +129,14 @@ function showReducedGraph(user, others, owee, radius, links) {
         return (owee) ? (i * (5 * Math.PI / 6) / (others.length - 1) + Math.PI / 12) : (i * (5 * Math.PI / 6) / (others.length - 1) - 11 * Math.PI / 12);
       }
 
+  if (others.length === 1) {
+    radianIt = function(i) {
+      return (owee) ? (Math.PI / 2) : (-Math.PI / 2);
+    }
+  }
+
   // User Node
-  var user = svg.selectAll('.user').data([user])
+  var userNode = svg.selectAll('.user').data([user])
     .enter().append('circle')
     .attr('id', function (d) { return 'user' + d.id; })
     .attr('class', 'user')
@@ -119,12 +157,12 @@ function showReducedGraph(user, others, owee, radius, links) {
       return Math.cos(radianIt(i)) * radius + midX;
     })
     .attr('cy', function(d, i) {
-      return Math.sin(radianIt(i)) * radius + midY / ((owee) ? 1.3 : 0.8);
+      return Math.sin(radianIt(i)) * radius + (midY / ((owee) ? 1.3 : 0.8));
     })
     .style("fill", function(d, i) { return color(i); })
     .style("stroke-width", 1)
     .style("stroke", 'white');
-  
+
   // Link Arrows
   svg.append("svg:defs").selectAll("marker")
     .data(["arrow"])
@@ -143,14 +181,13 @@ function showReducedGraph(user, others, owee, radius, links) {
   
   // Links
   svg.selectAll("line")
-    .data(links)
+    .data(others)
     .enter()
       .append("svg:line")
-      .attr('id', function(d) { return 'link' + d.id; })
-      .attr("x1", function(d) { return d3.select( (owee) ? ('#user'+d.targetId) : ('#user'+d.sourceId) ).attr('cx'); })
-      .attr("y1", function(d) { return d3.select( (owee) ? ('#user'+d.targetId) : ('#user'+d.sourceId) ).attr('cy'); })
-      .attr("x2", function(d) { return d3.select( (owee) ? ('#user'+d.sourceId) : ('#user'+d.targetId) ).attr('cx'); })
-      .attr("y2", function(d) { return d3.select( (owee) ? ('#user'+d.sourceId) : ('#user'+d.targetId) ).attr('cy'); })
+      .attr("x1", function(d) { return d3.select( (owee) ? ('#user'+d.id) : ('#user'+user.id) ).attr('cx'); })
+      .attr("y1", function(d) { return d3.select( (owee) ? ('#user'+d.id) : ('#user'+user.id) ).attr('cy'); })
+      .attr("x2", function(d) { return d3.select( (owee) ? ('#user'+user.id) : ('#user'+d.id) ).attr('cx'); })
+      .attr("y2", function(d) { return d3.select( (owee) ? ('#user'+user.id) : ('#user'+d.id) ).attr('cy'); })
       .attr("class", "link arrow")
       .attr("marker-end", "url(#arrow)")
       .style("stroke-width", 5)
@@ -178,15 +215,62 @@ function showReducedGraph(user, others, owee, radius, links) {
   });
 }
 
-showReducedGraph(reducedData.users[0], reducedData.users, true, 210, reducedData.links);
-
 function switchGraph() {
   $('#transaction-history').toggleClass('hidden')
   if ($('#transaction-history').hasClass('hidden')) {
-    showReducedGraph(reducedData.users[0], reducedData.users, true, 210, reducedData.links);
+    showReducedGraph(user, others, owee, 210);
   } else {
-    setupFullGraph(historData.users, historData.links, 180);
+    setupFullGraph(users, transactions, 180);
   }
 }
 
-$('.onoffswitch input').click(switchGraph);
+$.get('/rooms', null, function (data) { userId = data.id; room = data.rooms[0]; // Need to change this to suit appropriate room
+  
+  user = room.graph[userId];
+  user.id = userId;
+  owee = user.worth > 0;
+
+  // Create the list of people who owe/are owed
+  others = Object.keys(user.edges).map(function (key) {
+    return {
+      name: room.graph[key].name,
+      value: Math.abs(user.edges[key]),
+      id: +key
+    }
+  });
+  
+  // Show reduced graph
+  showReducedGraph(user, others, owee, 210);
+
+  $.get('/transactions', { roomId: room.room_id }, function (tHistory) { console.log(tHistory);
+
+    transactions = tHistory.filter(function (transaction) {
+      return transaction.sink_user_id != null && transaction.source_user_id != null;
+    }).map(function (transaction) {
+      return {
+        sourceId: (transaction.value > 0) ? transaction.sink_user_id : transaction.source_user_id,
+        targetId: (transaction.value > 0) ? transaction.source_user_id : transaction.sink_user_id,
+        sourceName: (transaction.value > 0) ? room.graph[transaction.sink_user_id].name : room.graph[transaction.source_user_id].name,
+        targetName: (transaction.value > 0) ? room.graph[transaction.source_user_id].name : room.graph[transaction.sink_user_id].name,
+        reason: transaction.reason,
+        amount: Math.abs(transaction.value)
+      }
+    })
+
+    users = Object.keys(room.graph).map(function (key) {
+      return {
+        name: room.graph[key].name,
+        id: +key
+      }
+    });
+
+    // Enable switching display
+    $('.onoffswitch input').click(switchGraph);
+  
+    // Enable adding transactions
+    $('#add-form').submit(function (event) {
+      event.preventDefault();
+      return false;
+    });
+  });
+});
