@@ -19,8 +19,23 @@ var Transactions = db.define('transactions', {
      */
     approve : function(callback) {
       if (this.approved_time === null) {
-        this.approved_time = new Date();
-        this.save(callback);
+        var that = this;
+        async.waterfall(
+        [
+          function(callback) {
+            that.approved_time = new Date();
+            that.save(callback);
+          },
+          function(callback) {
+            that.getRoom(callback);
+          },
+          function(room, callback) {
+            graph.addTransaction(room.graph, that);
+            room.graph = JSON.parse(JSON.stringify(room.graph));
+            room.save(callback);
+          }
+        ],
+        callback);
       }
     },
 

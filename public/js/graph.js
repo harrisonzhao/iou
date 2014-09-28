@@ -1,3 +1,4 @@
+$.get('/rooms', null, function (data) { console.log(data); })
 reducedData = {
   users : [
     { name: "Bobby", id: 1, value: 250 },
@@ -21,7 +22,11 @@ historData = {
     { name: "Harrison" },
     { name: "Fukang" }
   ],
-  transactions : [],
+  links : [
+    { id: 1, sourceId: 1, targetId: 2},
+    { id: 2, sourceId: 1, targetId: 3},
+    { id: 3, sourceId: 1, targetId: 4},
+  ],
   selected : []
 }
 
@@ -31,14 +36,37 @@ var width = 760,
 var color = d3.scale.category10();
 
 // Historical Graph
-var svg = d3.select("body").append("svg")
+var svg = d3.select("#svg-window").append("svg")
   .attr("width", width)
   .attr("height", height);
 
 var midX = width / 2,
     midY = height / 2;
 
-function setupFullGraph(users, radius) {
+function setupFullGraph(users, links, radius) {
+
+  svg.selectAll('*').remove();
+
+  $('#transaction-history ul').empty();
+
+  // Populate History
+  links.forEach(function (link) {
+    var element = document.createElement('li')
+    element.innerHTML = "Cheng owes Rene $10 because of dinner"
+    element.attributes.selected = false
+    element.onclick = function() {
+      element.attributes.selected = !element.attributes.selected
+      if (element.attributes.selected) {
+        element.className = 'selected'
+      } else {
+        element.className = ''
+      }
+    }
+    element.onmouseover = function() {
+
+    }
+    $('#transaction-history ul').append(element);
+  })
 
   var radianIt = function (i) {
     return i * (2 * Math.PI / users.length) - Math.PI / 2;
@@ -62,6 +90,8 @@ function setupFullGraph(users, radius) {
 
 function showReducedGraph(user, others, owee, radius, links) {
 
+  svg.selectAll('*').remove();
+
   var linkColor = (owee) ? 'green' : 'red'
       radianIt = function (i) {
         return (owee) ? (i * (5 * Math.PI / 6) / (others.length - 1) + Math.PI / 12) : (i * (5 * Math.PI / 6) / (others.length - 1) - 11 * Math.PI / 12);
@@ -75,8 +105,9 @@ function showReducedGraph(user, others, owee, radius, links) {
     .attr('r', 10)
     .attr('cx', width / 2)
     .attr('cy', (owee) ? (height / 4) : (3 * height / 4))
-    .style("stroke-width", 2)
-    .style("stroke", 'black');
+    .style("stroke-width", 1)
+    .style("stroke", 'white')
+    .style("fill", 'white');
 
   // Other Members' Nodes
   var node = svg.selectAll('.others').data(others)
@@ -91,8 +122,8 @@ function showReducedGraph(user, others, owee, radius, links) {
       return Math.sin(radianIt(i)) * radius + midY / ((owee) ? 1.3 : 0.8);
     })
     .style("fill", function(d, i) { return color(i); })
-    .style("stroke-width", 2)
-    .style("stroke", 'black');
+    .style("stroke-width", 1)
+    .style("stroke", 'white');
   
   // Link Arrows
   svg.append("svg:defs").selectAll("marker")
@@ -147,5 +178,15 @@ function showReducedGraph(user, others, owee, radius, links) {
   });
 }
 
-//setupFullGraph(historData.users, 180);
 showReducedGraph(reducedData.users[0], reducedData.users, true, 210, reducedData.links);
+
+function switchGraph() {
+  $('#transaction-history').toggleClass('hidden')
+  if ($('#transaction-history').hasClass('hidden')) {
+    showReducedGraph(reducedData.users[0], reducedData.users, true, 210, reducedData.links);
+  } else {
+    setupFullGraph(historData.users, historData.links, 180);
+  }
+}
+
+$('.onoffswitch input').click(switchGraph);

@@ -86,7 +86,10 @@ exports.createRoom = function(req, res, next) {
 exports.getRooms = function(req, res, next) {
   req.user.getRooms(function(err, rooms) {
     if (err) { return next(err); }
-    res.send(rooms);
+    res.send({
+      id: req.user.user_id,
+      rooms: rooms
+    });
   });
 }
 
