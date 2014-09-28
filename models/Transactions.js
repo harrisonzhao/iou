@@ -1,8 +1,9 @@
 'use strict';
 (require('rootpath')());
 
-var db = require('config/orm');
 var async = require('async');
+var db = require('config/orm');
+var graph = require('lib/graph');
 
 var Transactions = db.define('transactions', {
   transaction_id : { type: "serial", key: true }, // autoincrementing primary key
@@ -14,14 +15,12 @@ var Transactions = db.define('transactions', {
   methods : {
     /**
      * @param  {Function} callback
-     * args: err, transaction
+     * args: err
      */
     approve : function(callback) {
       if (this.approved_time === null) {
         this.approved_time = new Date();
-        this.save(function(err) {
-          callback(err, this);
-        });
+        this.save(callback);
       }
     },
 
@@ -30,7 +29,7 @@ var Transactions = db.define('transactions', {
      * @param  {obj}   source   [description]
      * @param  {obj}   sink     [description]
      * @param  {Function} callback
-     * args: err, transaction
+     * args: err
      */
     linkRelations : function(room, source, sink, callback) {
       var that = this;
@@ -45,10 +44,7 @@ var Transactions = db.define('transactions', {
         function(callback) {
           that.setSink(sink, callback);
         }
-      ],
-      function(err) {
-        callback(err, that);
-      });
+      ], callback);
     }
   }
 });
@@ -84,11 +80,13 @@ Transactions.newTransaction = function(room, source, sink, value, reason, callba
     },
     function(callback) {
       this.create(transaction, callback);
+    },
+    function(err, result) {
+      if (err) callback(err, result);
+      else result.linkRelations(room, source, sink, callback);
     }
-  ],
-  function(err, result) {
-    if (err) callback(err, result);
-    else result.linkRelations(room, source, sink, callback);
+  ], function(err) {
+    callback(err, that);
   });
 };
 

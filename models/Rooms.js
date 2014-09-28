@@ -3,6 +3,7 @@
 
 var async = require('async');
 var db = require('config/orm');
+var graph = require('lib/graph');
 
 var Rooms = db.define('rooms', {
   room_id  : { type: "serial", key: true }, // autoincrementing primary key

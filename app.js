@@ -12,12 +12,16 @@ var registry = require('controllers/registry');
 app.get('/', registry.renderIndex);
 app.get('/signup', registry.renderSignup);
 app.get('/login', registry.renderLogin);
+app.get('/graph', registry.renderGraph);
 
 var auth = require('controllers/auth');
 app.post('/login', auth.localLogin);
 app.post('/signup', auth.localSignup);
 app.all('*', auth.checkLoggedIn);
 app.get('/logout', auth.logout);
+
+var api = require('controllers/api');
+app.get('/rooms', api.getRooms);
 
 var models = require('models/models');
 // models.Users.newUser('abc', 'def', 'hij', 'klm', function(err, result) {

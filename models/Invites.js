@@ -11,20 +11,45 @@ var Invites = db.define('invites', {
   methods : {
     /**
      * @param  {Function} callback
-     * args: err, invite
+     * args: err
      */
     completeInvite : function(callback) {
-      this.complete = 1;
-      this.save(function(err) {
-        callback(err, this);
-      });
+      if (!this.complete) {
+        var that = this;
+
+        async.waterfall(
+        [
+          function(callback) {
+            that.getRoom(callback);
+          },
+          function(room, callback) {
+            that.getReceiver(function(err, receiver) {
+              callback(err, room, receiver);
+            });
+          },
+          function(room, receiver, callback) {
+            receiver.hasRooms(room, function(err, inRoom) {
+              callback(err, inRoom, receiver, room);
+            });
+          },
+          function(inRoom, receiver, room, callback) {
+            if (inRoom) callback(new Error("User already in room"), room);
+            else room.addUser(receiver, callback);
+          },
+          function(room, callback) {
+            that.complete = 1;
+            that.save(callback);
+          }
+        ],
+        callback);
+      }
     },
 
     /**
      * @param  {obj} room
      * @param  {obj} receiver
      * @param  {Function} callback
-     * args err, invite
+     * args err
      */
     linkRelations : function(room, receiver, callback) {
       var that = this;
@@ -37,9 +62,7 @@ var Invites = db.define('invites', {
           that.setReceiver(receiver, callback);
         }
       ],
-      function(err) {
-        callback(err, that);
-      });
+      callback);
     }
   }
 });
@@ -77,8 +100,9 @@ Invites.newInvite = function(room, user, callback) {
     function(result, callback) {
       result.linkRelations(room, user, callback);
     }
-  ],
-  callback);
+  ], function(err) {
+    callback(err, that);
+  });
 };
 
 module.exports = Invites;
