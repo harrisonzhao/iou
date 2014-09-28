@@ -29,7 +29,7 @@ app.get('/invites', api.getInvites); //query params: none needed!
 //send an invite to another email for room with given roomId
 app.post('/invites/new', api.sendInviteForRoom); //email, roomId
 //accept an invite with inviteId 
-app.post('/invites/accept', api.acceptInvites); //inviteId
+app.post('/invites/accept', api.acceptInvite); //inviteId
 
 //create new room with roomName
 app.post('/rooms/new', api.createRoom); //roomName
@@ -52,8 +52,14 @@ app.post('/transactions/approve', api.approveTransaction); //transactionId
 //   console.log(err ? err : result);
 // });
 
-// models.Users.one({email : "pusheen@pusheen.cat"}, function(err, user) {
-//   models.Rooms.one({name : "pusheen"}, function(err, room) {
+// models.Users.one({email: "asdf"}, function(err, user) {
+//   models.Rooms.newRoom("Pusheen", user, function(err, room) {
+//     if (err) console.log(err);
+//   });
+// });
+
+// models.Users.one({email : "asdf2"}, function(err, user) {
+//   models.Rooms.one({name : "Pusheen"}, function(err, room) {
 //     models.Invites.newInvite(room, user, function(err, invite) {
 //       if (err) console.log(err);
 //     });
