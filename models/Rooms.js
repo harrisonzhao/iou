@@ -62,6 +62,8 @@ var Rooms = db.define('rooms', {
               if (users.length === 0) {
                 that.is_empty = 1;
               }
+              graph.removeUser(that.graph, user);
+              that.graph = JSON.parse(JSON.stringify(that.graph));
               callback(null);
             }
           });
