@@ -24,17 +24,27 @@ var api = require('controllers/api');
 
 //ALL POST DATA IS IN BODY
 //ALL GET DATA IS IN QUERY
+//get all your invites
 app.get('/invites', api.getInvites); //query params: none needed! 
+//send an invite to another email for room with given roomId
 app.post('/invites/new', api.sendInviteForRoom); //email, roomId
+//accept an invite with inviteId 
 app.post('/invites/accept', api.acceptInvite); //inviteId
 
+//create new room with roomName
 app.post('/rooms/new', api.createRoom); //roomName
+//get all your rooms
 app.get('/rooms', api.getRooms); //none needed!
+//leave room with given roomId
 app.post('/rooms/leave', api.leaveRoom); //roomId
 
+//get transaction history for room with given roomId
 app.get('/transactions', api.getRoomTransactionHistory); //roomId
+//get all pending transactions for user (augments each transaction with isSource(specifies if user is source or not))
 app.get('/transactions/pending', api.getUserPendingTransactions); //none needed!
+//request a transaction
 app.post('/transactions/new', api.requestTransaction); //need roomId, id of other user, value (charge amount), reason
+//approve a transaction with given transactionId
 app.post('/transactions/approve', api.approveTransaction); //transactionId
 
 // var models = require('models/models');
