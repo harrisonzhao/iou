@@ -7,6 +7,14 @@ var Rooms = models.Rooms;
 var Transactions = models.Transactions;
 var Invites = models.Invites;
 
+//get req
+exports.getInvites = function(req, res, next) {
+  req.user.getInvites(function(err, results) {
+    if (err) { return next(err); }
+    res.send(results);
+  })
+}
+
 //post req
 //send invite to an email
 //need email
@@ -42,14 +50,6 @@ exports.sendInviteForRoom = function(req, res, next) {
     if (err) { return next(err); }
     res.sendStatus(200);
   });
-}
-
-//get req
-exports.getInvites = function(req, res, next) {
-  req.user.getInvites(function(err, results) {
-    if (err) { return next(err); }
-    res.send(results);
-  })
 }
 
 //post req
@@ -128,6 +128,41 @@ exports.getRoomTransactionHistory = function(req, res, next) {
   })
 }
 
+//get req
+//potentially lots of transactions
+//NOTE: augment transaction with isSource (to distinguish who user is)
+exports.getUserPendingTransactions = function(req, res, next) {
+  async.waterfall(
+  [
+    function(callback) {
+      Transactions.find({ approved_time: null }, callback);
+    },
+    function(unfilteredTransactions, callback) {
+      async.filter(
+        unfilteredTransactions, 
+        function(transaction, callback) {
+          callback(
+            transaction.source === req.user.user_id ||
+            transaction.sink === req.user.user_id); 
+        }, callback);
+    },
+    function(transactions, callback) {
+      async.map(transactions, function(transaction, callback) {
+        if (transaction.source === req.user.user_id) {
+          transaction.isSource = true;
+        } else {
+          transaction.isSource = false
+        }
+        callback(null, transaction);
+      }, callback);
+    }
+  ],
+  function(err, results) {
+    if (err) { return next(err); }
+    res.send(results);
+  });
+}
+
 //post req
 //need roomId
 //need id of other user (being charged)
@@ -199,40 +234,5 @@ exports.approveTransaction = function(req, res, next) {
   function(err) {
     if (err) { return next(err); }
     res.sendStatus(200);
-  });
-}
-
-//get req
-//potentially lots of transactions
-//NOTE: augment transaction with isSource (to distinguish who user is)
-exports.getUserPendingTransactions = function(req, res, next) {
-  async.waterfall(
-  [
-    function(callback) {
-      Transactions.find({ approved_time: null }, callback);
-    },
-    function(unfilteredTransactions, callback) {
-      async.filter(
-        unfilteredTransactions, 
-        function(transaction, callback) {
-          callback(
-            transaction.source === req.user.user_id ||
-            transaction.sink === req.user.user_id); 
-        }, callback);
-    },
-    function(transactions, callback) {
-      async.map(transactions, function(transaction, callback) {
-        if (transaction.source === req.user.user_id) {
-          transaction.isSource = true;
-        } else {
-          transaction.isSource = false
-        }
-        callback(null, transaction);
-      }, callback);
-    }
-  ],
-  function(err, results) {
-    if (err) { return next(err); }
-    res.send(results);
   });
 }

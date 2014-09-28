@@ -22,18 +22,20 @@ app.get('/logout', auth.logout);
 
 var api = require('controllers/api');
 
-app.get('/invites', api.getInvites);
-app.post('/invites/new', api.sendInviteForRoom);
-// app.post('/invites/accept', api.acceptInvites);
+//ALL POST DATA IS IN BODY
+//ALL GET DATA IS IN QUERY
+app.get('/invites', api.getInvites); //query params: none needed! 
+app.post('/invites/new', api.sendInviteForRoom); //email, roomId
+app.post('/invites/accept', api.acceptInvites); //inviteId
 
-app.get('/rooms', api.getRooms);
-app.post('/rooms/new', api.createRoom);
-app.post('/rooms/leave', api.leaveRoom);
+app.post('/rooms/new', api.createRoom); //roomName
+app.get('/rooms', api.getRooms); //none needed!
+app.post('/rooms/leave', api.leaveRoom); //roomId
 
-app.get('/transactions', api.getRoomTransactionHistory);
-app.get('/transactions/pending', api.getUserPendingTransactions);
-app.post('/transactions/new', api.requestTransaction);
-app.post('/transactions/approve', api.approveTransaction);
+app.get('/transactions', api.getRoomTransactionHistory); //roomId
+app.get('/transactions/pending', api.getUserPendingTransactions); //none needed!
+app.post('/transactions/new', api.requestTransaction); //need roomId, id of other user, value (charge amount), reason
+app.post('/transactions/approve', api.approveTransaction); //transactionId
 
 // var models = require('models/models');
 // models.Users.newUser('Pusheen', 'the Cat', 'pusheen@pusheen.cat', 'asdf', function(err, result) {
