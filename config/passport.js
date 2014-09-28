@@ -42,11 +42,11 @@ module.exports = function(passport) {
   /* Passport needs ability to serialize and deserialize users out of session */
 
   // Serialize the user for the session
-  passport.serializeUser(function(user, done) { done(null, user.userId); });
+  passport.serializeUser(function(user, done) { done(null, user.user_id); });
 
   // Deserialize the user
   passport.deserializeUser(function(id, done) {
-    User.selectById(id, function(err, user) { done(err, user); });
+    User.get(id, function(err, user) { done(err, user); });
   });
 
   // Local login strategy

@@ -12,6 +12,14 @@ models.Users.newUser('abc', 'def', 'hij', 'klm', function(err, result) {
   console.log(err ? err : result);
 })*/
 var registry = require('controllers/registry');
+app.get('/', registry.renderIndex);
+app.get('/signup', registry.renderSignup);
+app.get('/login', registry.renderLogin);
+
+var auth = require('controllers/auth');
+app.post('/login', auth.localLogin);
+app.post('/signup', auth.localSignup);
+
 // var staticPages = require('controllers/pages');
 // app.get('/', staticPages.renderIndex);
 // app.get('/login/', staticPages.renderLogin);
@@ -28,7 +36,7 @@ app.listen(configs.settings.secrets.port);
 console.log('listening on port ' + configs.settings.secrets.port);
 
 //login/landing page
-//signup
+//signup 
 //rooms
 //graph
 //add for transaction
