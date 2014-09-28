@@ -78,7 +78,7 @@ function setupFullGraph(users, transactions, radius) {
 
     // Create the element
     var element = document.createElement('li')
-    element.innerHTML = transaction.sourceName + " owes " + transaction.targetName + " $" + transaction.amount + " because of " + transaction.reason
+    element.innerHTML = transaction.sourceName + " owes " + transaction.targetName + " $" + (transaction.amount/100).toFixed( 2 ) + " because of " + transaction.reason
     element.attributes.selected = false
 
     // Listeners for element
@@ -219,7 +219,7 @@ function showReducedGraph(user, others, owee, radius) {
     title: function() {
       var d = this.__data__;
       var name = d.name;
-      var value = d.value / 100;
+      var value = (d.value / 100).toFixed( 2 );
       return (owee) ? ('I\'m ' + name + ' and IOU $' + value) : ('Hi ' + name + ', IOU $' + value); 
     }
   });
