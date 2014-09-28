@@ -1,0 +1,36 @@
+<!doctype html>
+<html>
+<head>
+  <link href="http://fonts.googleapis.com/css?family=Lora:400,700,400italic,700italic" rel="stylesheet" type="text/css">
+  <link href="http://fonts.googleapis.com/css?family=Montserrat:400,700" rel="stylesheet" type="text/css">
+  <link href="css/index.css" rel="stylesheet">
+  <title>IOU</title>
+<body>
+<div>
+  <style>
+    html { 
+    background: url(assets/logo.jpg) no-repeat center center fixed; 
+    -webkit-background-size: cover;
+    -moz-background-size: cover;
+    -o-background-size: cover;
+    background-size: cover;
+    }
+  </style>
+
+  <!-- show any messages that come back with authentication -->
+  {{#if error}}
+    <div class="alert alert-danger">{{error}}</div>
+  {{/if}}
+
+  <!-- LOGIN FORM -->
+  <form action="/login" method="post">
+    <div id="login" class="form-group">
+      <button type="submit" class="btn btn-default" onClick="createRoom()">Login Or Signup Here</button>
+    </div>
+  </form>
+  <h1>Owing Others Has Never Been So Easy</h1>
+  <script type="text/javascript" src="/js/index.js"></script>
+
+</div>
+</body>
+</html>

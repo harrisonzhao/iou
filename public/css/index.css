@@ -1,0 +1,51 @@
+html { 
+    background: url(assets/logo.jpg) no-repeat center center fixed; 
+    -webkit-background-size: cover;
+    -moz-background-size: cover;
+    -o-background-size: cover;
+    background-size: cover;
+    }
+
+body {
+    font-family: Montserrat;
+    padding 0;
+}
+
+#login {
+	position: absolute;
+    top: 0;
+    right: 0;
+    width: 205px;
+}
+
+h1 {
+	color: white;
+	margin-top: 50px;
+	text-shadow: -2px 0 black, 0 2px black, 2px 0 black, 0 -2px black;
+	position: relative; width: 300px;
+	text-align: center;
+    margin-left: auto;
+    margin-right: auto;
+    font-size: 40px;
+}
+
+#login button {
+	border: 1px solid #219ab3;
+	text-align: center;
+	font-family: Montserrat;
+	color: #219ab3;
+	text-transform: uppercase;
+	font-weight: 400;
+	background-color: transparent;
+	transition: all .3s ease-in-out;
+	display: inline-block;
+	padding: 6px 12px;
+	font-size: 14px;
+	cursor: pointer;
+	border-radius: 4px;
+}
+
+#login button:hover {
+	background-color: #219ab3;
+	color: black;
+}

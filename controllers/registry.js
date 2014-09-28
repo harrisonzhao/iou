@@ -3,7 +3,7 @@
 exports.renderIndex = function(req, res) {
   req.user ? 
     res.redirect('/profile') :
-    res.render('/index');
+    res.render('index');
 }
 
 exports.renderLogin = function(req, res) {
