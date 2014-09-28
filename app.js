@@ -19,6 +19,9 @@ app.post('/signup', auth.localSignup);
 app.all('*', auth.checkLoggedIn);
 app.get('/logout', auth.logout);
 
+var api = require('controllers/api');
+app.get('/rooms', api.getRooms);
+
 var models = require('models/models');
 // models.Users.newUser('abc', 'def', 'hij', 'klm', function(err, result) {
 //   console.log(err ? err : result);

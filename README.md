@@ -22,6 +22,8 @@ node app.js
 #point the browser to localhost:3000 to visit the site
 ```
 
+ALL MONEY FROM SOURCE TO SINK
+
 HOW TO ACCESS DATABASE (need mysql client):
 mysql --host=us-cdbr-azure-east-a.cloudapp.net --user=b6bf084c45dab9 --password=c2bed79d iouuomeA14Hvih1b
 
