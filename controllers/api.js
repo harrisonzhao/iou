@@ -38,9 +38,18 @@ exports.sendInviteForRoom = function(req, res, next) {
       Invites.newInvite(room, otherUser, callback);
     }
   ],
-  function(err) {
-
+  function(err, newInvite) {
+    if (err) { return next(err); }
+    res.sendStatus(200);
   });
+}
+
+//get req
+exports.getInvites = function(req, res, next) {
+  req.user.getInvites(function(err, results) {
+    if (err) { return next(err); }
+    res.send(results);
+  })
 }
 
 //get req
