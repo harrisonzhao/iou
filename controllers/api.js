@@ -7,17 +7,17 @@ var Rooms = models.Rooms;
 var Transactions = models.Transactions;
 var Invites = models.Invites;
 
-//get req
+//post req
 //send invite to an email
 //need email
 //need roomId
 exports.sendInviteForRoom = function(req, res, next) {
-  var roomId = parseInt(req.query.roomId);
+  var roomId = parseInt(req.body.roomId);
   var getRoomAndOtherUser = function(callback) {
     async.parallel(
     [
       function(callback) {
-        Users.one({email: req.query.email}, callback);
+        Users.one({email: req.body.email}, callback);
       },
       function(callback) {
         Rooms.get(roomId, callback);
@@ -52,12 +52,31 @@ exports.getInvites = function(req, res, next) {
   })
 }
 
-//get req
+//post req
+//need inviteId
+exports.acceptInvite = function(req, res, next) {
+  var inviteId = parseInt(req.body.inviteId);
+  async.waterfall(
+  [
+    function(callback) {
+      Invites.get(inviteId, callback);
+    },
+    function(invite, callback) {
+      invite.acceptInvite(callback);
+    }
+  ],
+  function(err) {
+    if (err) { return next(err); }
+    res.sendStatus(200);
+  });
+}
+
+//post req
 //create room
 //needs roomName
 exports.createRoom = function(req, res, next) {
-  req.query.roomName = req.query.roomName || 'DEFAULT NAME';
-  Rooms.create(req.query.roomName, req.user, function(err, result) {
+  req.body.roomName = req.body.roomName || 'DEFAULT NAME';
+  Rooms.create(req.body.roomName, req.user, function(err, result) {
     if (err) { return next(err); }
     res.sendStatus(200);
   })
@@ -71,10 +90,10 @@ exports.getRooms = function(req, res, next) {
   });
 }
 
-//get req
+//post req
 //need roomId
 exports.leaveRoom = function(req, res, next) {
-  var roomId = parseInt(req.query.roomId);
+  var roomId = parseInt(req.body.roomId);
   async.waterfall(
   [
     function(callback) {
@@ -109,18 +128,18 @@ exports.getRoomTransactionHistory = function(req, res, next) {
   })
 }
 
-//get req
+//post req
 //need roomId
 //need id of other user (being charged)
 //need value
 //need reason
 exports.requestTransaction = function(req, res, next) {
-  var value = parseInt(req.query.value);
-  var id = parseInt(req.query.id);
-  var roomId = parseInt(req.query.roomId);
+  var value = parseInt(req.body.value);
+  var id = parseInt(req.body.id);
+  var roomId = parseInt(req.body.roomId);
   if (!value || !id || !roomId) { return next(new Error('invalid values')); }
   var source, sink;
-  req.query.reason = req.query.reason || 'no reason';
+  req.body.reason = req.body.reason || 'no reason';
   var getRoomAndOtherUser = function(callback) {
     async.parallel(
     [
@@ -163,10 +182,10 @@ exports.requestTransaction = function(req, res, next) {
   });
 }
 
-//get req
+//post req
 //need transactionId
 exports.approveTransaction = function(req, res, next) {
-  var transactionId = parseInt(req.query.transactionId);
+  var transactionId = parseInt(req.body.transactionId);
   if (!transactionId) { next(new Error('invalid transactionId')); }
   async.waterfall(
   [
