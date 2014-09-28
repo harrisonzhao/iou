@@ -88,7 +88,7 @@ exports.acceptInvite = function(req, res, next) {
 //needs roomName
 exports.createRoom = function(req, res, next) {
   req.body.roomName = req.body.roomName || 'DEFAULT NAME';
-  Rooms.create(req.body.roomName, req.user, function(err, result) {
+  Rooms.newRoom(req.body.roomName, req.user, function(err, result) {
     if (err) { return next(err); }
     res.send({roomId: result.room_id});
   })
