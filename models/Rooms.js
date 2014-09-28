@@ -11,6 +11,11 @@ var Rooms = db.define('rooms', {
   graph    : { type: "object" },
 }, {
   methods : {
+    /**
+     * @param  {obj}   user     [description]
+     * @param  {Function} callback
+     * args: err, room
+     */
     addUser : function(user, callback) {
       var that = this;
       async.waterfall(
@@ -25,14 +30,19 @@ var Rooms = db.define('rooms', {
           });
         },
         function(callback) {
-          that.save(function(err) {
-            callback(err, that);
-          });
+          that.save(callback);
         }
       ],
-      callback);
+      function(err) {
+        callback(err, that);
+      });
     },
 
+    /**
+     * @param  {obj}   user     [description]
+     * @param  {Function} callback
+     * args: err, room
+     */
     removeUser : function(user, callback) {
       var that = this;
       async.waterfall(
@@ -71,11 +81,8 @@ Rooms.newRoom = function(name, creator, callback) {
   };
 
   this.create(room, function(err, result) {
-    if (!err) {
-      result.addUser(creator, callback);
-    } else {
-      callback(err, result);
-    }
+    if (!err) result.addUser(creator, callback);
+    else callback(err, result);
   });
 };
 

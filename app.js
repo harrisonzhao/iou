@@ -7,11 +7,8 @@ var app = module.exports = express();
 var configs = require('config/configs');
 configs.configure(app);
 
-/*var models = require('models/models');
-models.Users.newUser('abc', 'def', 'hij', 'klm', function(err, result) {
-  console.log(err ? err : result);
-})*/
 var registry = require('controllers/registry');
+
 app.get('/', registry.renderIndex);
 app.get('/signup', registry.renderSignup);
 app.get('/login', registry.renderLogin);
@@ -19,6 +16,17 @@ app.get('/login', registry.renderLogin);
 var auth = require('controllers/auth');
 app.post('/login', auth.localLogin);
 app.post('/signup', auth.localSignup);
+
+var models = require('models/models');
+// models.Users.newUser('abc', 'def', 'hij', 'klm', function(err, result) {
+//   console.log(err ? err : result);
+// })
+
+// models.Users.one({first_name : "Rene"}, function(err, result) {
+//   models.Rooms.newRoom("pusheen", result, function(err, result) {
+//     console.log("Hello");
+//   });
+// });
 
 // var staticPages = require('controllers/pages');
 // app.get('/', staticPages.renderIndex);

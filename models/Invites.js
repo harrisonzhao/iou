@@ -11,18 +11,20 @@ var Invites = db.define('invites', {
   methods : {
     /**
      * @param  {Function} callback
-     * args: (err)
+     * args: err, invite
      */
     completeInvite : function(callback) {
       this.complete = 1;
-      this.save(callback);
+      this.save(function(err) {
+        callback(err, this);
+      });
     },
 
     /**
      * @param  {obj} room
      * @param  {obj} receiver
      * @param  {Function} callback
-     * args (err)
+     * args err, invite
      */
     linkRelations : function(room, receiver, callback) {
       var that = this;
@@ -35,7 +37,9 @@ var Invites = db.define('invites', {
           that.setReceiver(receiver, callback);
         }
       ],
-      callback);
+      function(err) {
+        callback(err, that);
+      });
     }
   }
 });
@@ -44,33 +48,37 @@ Invites.newInvite = function(room, user, callback) {
   var invite = {
     complete : 0
   };
+
   var that = this;
   async.waterfall(
   [
     function(callback) {
+      user.hasRooms(room, function(err, inRoom) {
+        if (err) { return callback(err); }
+        if (inRoom) callback(new Error("User already in room"));
+        else callback(null);
+      });
+    },
+    function(callback) {
       that.count(
         {
-          room_room_id: room.room_id, 
+          room_room_id: room.room_id,
           receiver_user_id: user.user_id
-        }, 
+        },
         function(err, count) {
           if (err) { return callback(err); }
-          if (count) {
-            callback(new Error('Invite already exists for this user'));
-          } else {
-            callback(null);
-          }
+          if (count) callback(new Error('Invite already exists for this user'));
+          else callback(null);
         });
     },
     function(callback) {
       that.create(invite, callback);
+    },
+    function(result, callback) {
+      result.linkRelations(room, user, callback);
     }
   ],
-  function(err, result) {
-    if (err) { return callback(err); }
-    result.linkRelations(room, user);
-    callback(null, result);
-  });
+  callback);
 };
 
 module.exports = Invites;
