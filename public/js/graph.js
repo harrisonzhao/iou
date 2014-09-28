@@ -20,6 +20,16 @@ var svg = d3.select("#svg-window").append("svg")
 var midX = width / 2,
     midY = height / 2;
 
+$('#add-form').submit(
+  function (event) {
+  $.post('/transactions/new', {
+    roomId: room.room_id,
+    id: (_.find(others, function (other) { return other.name == $('#ower').val()})).id,
+    value: (+$('#amount').val()) * 100,
+    reason: $('#reason').val()
+  })
+})
+
 function drawSelectedLinks(links_shown) {
 
   svg.selectAll('line').remove();
@@ -242,7 +252,7 @@ $.get('/rooms', null, function (data) { userId = data.id; room = data.rooms[0]; 
   // Show reduced graph
   showReducedGraph(user, others, owee, 210);
 
-  $.get('/transactions', { roomId: room.room_id }, function (tHistory) { console.log(tHistory);
+  $.get('/transactions', { roomId: room.room_id }, function (tHistory) {
 
     transactions = tHistory.filter(function (transaction) {
       return transaction.sink_user_id != null && transaction.source_user_id != null;
@@ -267,10 +277,5 @@ $.get('/rooms', null, function (data) { userId = data.id; room = data.rooms[0]; 
     // Enable switching display
     $('.onoffswitch input').click(switchGraph);
   
-    // Enable adding transactions
-    $('#add-form').submit(function (event) {
-      event.preventDefault();
-      return false;
-    });
   });
 });

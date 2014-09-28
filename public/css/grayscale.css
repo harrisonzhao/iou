@@ -363,11 +363,13 @@ body {
 }
 
 #transaction-history, #add-transaction {
-    margin-top: 90px;
+    margin-top: 10px;
 }
 
 #transaction-history ul {
     list-style-type: none;
+    overflow-y: scroll;
+    height: 420px;
 }
 
 #transaction-history ul li {

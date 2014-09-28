@@ -208,7 +208,7 @@ exports.requestTransaction = function(req, res, next) {
       } else {
         callback(new Error('cannot have 0 value'));
       }
-      Transactions.newTransaction(room, source, sink, value, req.query.reason, function(err, result) {
+      Transactions.newTransaction(room, source, sink, value, req.body.reason, function(err, result) {
         callback(err);
       });
     }
