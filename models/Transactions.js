@@ -3,6 +3,7 @@
 
 var async = require('async');
 var db = require('config/orm');
+var graph = require('lib/graph');
 
 var Transactions = db.define('transactions', {
   transaction_id : { type: "serial", key: true }, // autoincrementing primary key

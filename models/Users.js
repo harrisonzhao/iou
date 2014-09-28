@@ -15,6 +15,10 @@ var Users = db.define('users', {
   methods : {
     validPassword: function(password) {
       return bcrypt.compareSync(password, this.password_hash);
+    },
+
+    fullName : function() {
+      return this.first_name + " " + this.last_name;
     }
   }
 });
