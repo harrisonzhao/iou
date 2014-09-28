@@ -362,6 +362,37 @@ body {
     webkit-tap-highlight-color: rgba(255,255,255,.2);
 }
 
+/*
+ * Lobby Stylings
+ */
+#emails {
+    width: 500px;
+}
+
+#room-list ul {
+    padding-right: 25px;
+    margin-top: 100px;
+    list-style-type: none;
+}
+
+#room-list li {
+    cursor:pointer;
+    border: 1px solid white;
+    background-color: black;
+    outline: 0;
+    color: white;
+    font-family: Montserrat;
+    border-radius: 4px;
+}
+
+#room-list li:hover {
+    background-color: white;
+    color: black;
+}
+
+/*
+ * Graph Stylings
+ */
 #transaction-history, #add-transaction {
     margin-top: 10px;
 }
