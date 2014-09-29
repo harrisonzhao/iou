@@ -52,28 +52,28 @@ app.post('/transactions/new', api.requestTransaction); //need roomId, id of othe
 //approve a transaction with given transactionId
 app.post('/transactions/approve', api.approveTransaction); //transactionId
 
-// var models = require('models/models');
+/*var models = require('models/models');
 
-// var pay = function(room_id, email1, email2, value, reason) {
-//   models.Rooms.get(room_id, function(err, room) {
-//     models.Users.one({email : email1}, function(err, user1) {
-//       models.Users.one({email : email2}, function(err, user2) {
-//         models.Transactions.newTransaction(room, user1, user2, value, reason, function(err, trans) {
-//           if (err) console.log(err);
-//         });
-//       });
-//     });
-//   });
-// };
+var pay = function(room_id, email1, email2, value, reason) {
+  models.Rooms.get(room_id, function(err, room) {
+    models.Users.one({email : email1}, function(err, user1) {
+      models.Users.one({email : email2}, function(err, user2) {
+        models.Transactions.newTransaction(room, user1, user2, value, reason, function(err, trans) {
+          if (err) console.log(err);
+        });
+      });
+    });
+  });
+};
 
-// pay(21, 'asdf3', 'asdf', 500, 'stuff');
+// pay(1, 'rz99@cornell.edu', 'bz88@cornell.edu', 500, 'stuff');
 
-// models.Transactions.one({transaction_id : 331}, function(err, trans) {
-//   trans.approve(function(err) {
-//     if (err) console.log(err);
-//   });
-// });
-
+models.Transactions.one({transaction_id : 1}, function(err, trans) {
+  trans.approve(function(err) {
+    if (err) console.log(err);
+  });
+});
+*/
 // models.Users.newUser('Pusheen', 'the Cat', 'pusheen@pusheen.cat', 'asdf', function(err, result) {
 //   console.log(err ? err : result);
 // });

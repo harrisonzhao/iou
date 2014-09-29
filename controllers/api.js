@@ -184,9 +184,11 @@ exports.getUserPendingTransactions = function(req, res, next) {
 //need value
 //need reason
 exports.requestTransaction = function(req, res, next) {
+  console.log('helllloloolol');
   var value = parseInt(req.body.value);
   var id = parseInt(req.body.id);
   var roomId = parseInt(req.body.roomId);
+  console.log(value + " " + id + " " + roomId);
   if (!value || !id || !roomId) { return next(new Error('invalid values')); }
   var source, sink;
   req.body.reason = req.body.reason || 'no reason';
@@ -220,7 +222,9 @@ exports.requestTransaction = function(req, res, next) {
       } else {
         callback(new Error('cannot have 0 value'));
       }
-      Transactions.newTransaction(room, source, sink, value, req.body.reason, callback);
+      Transactions.newTransaction(room, source, sink, value, req.body.reason, function(err, result) {
+        callback(null, result);
+      });
     },
     /*
       //original here cuts off waterfall
@@ -236,6 +240,7 @@ exports.requestTransaction = function(req, res, next) {
   ],
   //result not used
   function(err) {
+    //console.log(err);
     if (err) { return next(err); }
     res.sendStatus(200);
   });

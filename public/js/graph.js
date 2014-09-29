@@ -2,6 +2,8 @@ var user;
 var room;
 var owee;
 var others;
+//map of name to id
+var otherPeopleInRoom;
 var users;
 var transactions;
 
@@ -19,16 +21,6 @@ var svg = d3.select("#svg-window").append("svg")
 
 var midX = width / 2,
     midY = height / 2;
-
-$('#add-form').submit(
-  function (event) {
-  $.post('/transactions/new', {
-    roomId: room.room_id,
-    id: (_.find(others, function (other) { return other.name == $('#ower').val()})).id,
-    value: (+$('#amount').val()) * 100,
-    reason: $('#reason').val()
-  })
-})
 
 function drawSelectedLinks(links_shown) {
 
@@ -253,6 +245,14 @@ $.get('/rooms', null, function (data) {
   user.id = userId;
   owee = user.worth > 0;
 
+  otherPeopleInRoom = {};
+  var vertexIds = Object.keys(room.graph);
+  for (var it = 0; it !== vertexIds.length; ++it) {
+    if (vertexIds[i] !== userId) {
+      otherPeopleInRoom[room.graph[vertexIds[i]].name] = vertexIds[i];
+    }
+  }
+
   // Create the list of people who owe/are owed
   others = Object.keys(user.edges).map(function (key) {
     return {
@@ -292,3 +292,18 @@ $.get('/rooms', null, function (data) {
   
   });
 });
+
+$('#add-form').submit(
+  function (event) {
+    var id = otherPeopleInRoom[$('#ower').val()];
+    var value = (+$('#amount').val()) * 100;
+    var reason = $('#reason').val();
+    var splitUrl = window.location.pathname.split( '/' );
+    var postData = {
+      roomId: splitUrl[splitUrl.length - 1],
+      id: id,
+      value: value,
+      reason: reason
+    };
+    $.post('/transactions/new', postData);
+})
